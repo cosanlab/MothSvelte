@@ -1,27 +1,13 @@
 <script>
-  import { emotionPopup } from "../lib/pageSteps";
+  import { currentPageNumber, EmotionScaleModel } from "../lib/pageSteps";
   import { emotions } from "../constants/emotions";
-  import { onMount } from "svelte";
 
-
-  let emotionPop;
-  // emotion value method definition
-  const EmotionInit = () =>{
-     emotionPopup.subscribe((value) => {
-      emotionPop = value;
-    });
-  }
-  // when page is rendered
-  onMount(()=>{
-    EmotionInit();
-  })
   // Create an array of fillWidths to store the width for each div
   let fillWidths = Array(emotions.length).fill(0);
   // array of emotions names
   // Create an array to keep track of whether a div is clicked or not
   let clickedDivs = Array(emotions.length).fill(false);
 
- 
   // Function to handle mouse move for a specific div
   function handleMouseMove(index, event) {
     if (!clickedDivs[index]) {
@@ -33,6 +19,8 @@
       clickedDivs[emotions.length] = true;
     }
   }
+
+  
 
   // Function to handle mouse out for a specific div with a delay
   function handleMouseOut(index) {
@@ -52,7 +40,7 @@
 
   // Function to be called when pressing "Space" button
   function nextPage() {
-    emotionPopup.set(false);
+   EmotionScaleModel.set(false);
     RemovingEvent();
   }
 
@@ -70,14 +58,12 @@
   function RemovingEvent() {
     window.removeEventListener("keydown", spaceKeyPressHandler);
   }
-  
 </script>
 
-
-<div class="absolute top-0 z-50 container w-screen h-full flex justify-center items-center">
+<div class="container w-full h-full flex justify-center items-center">
   <div class="wrapper mt-10 flex justify-center flex-col gap-1">
     <div class="instruction mb-3 text-[19px]">
-      Please rate the emotions as instructed by video:
+      Please rate the emotions as instructed by the video:
     </div>
     <!-- Your existing code for emotion_tabs -->
     {#each emotions as emotion, index}
@@ -102,7 +88,7 @@
           on:click={() => handleDivClick(index)}
         >
           <div
-            class="fill absolute top-0 left-0 bg-[#ff816d] h-full"
+            class="fill absolute top-0 left-0 w-full h-full bg-[#ff816d]"
             style={`width: ${fillWidths[index]}%; transition: width 0.2s ease;`}
           />
         </div>
@@ -114,6 +100,7 @@
     <p class="mt-3 text-[19px]">Press "space" when finished</p>
   </div>
 </div>
+
 <style>
   .emotion_tab {
     min-width: 450px;

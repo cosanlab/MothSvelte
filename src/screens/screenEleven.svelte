@@ -1,5 +1,8 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
+  // temporary variables
+  let storySummary = "";
+  let dominantEmotion = "";
   // Triggered next page if everything is working correctly
   const NextPageHandler = () => {
     currentPageNumber.set(11);
@@ -7,7 +10,13 @@
 
   // Handle the click event
   const clickHandler = () => {
-    NextPageHandler();
+    const trimmedStorySummary = storySummary.trim();
+    const trimmedDominantEmotion = dominantEmotion.trim();
+    if (!trimmedStorySummary  || !trimmedDominantEmotion) {
+      window.alert("Please fill the fields for better experience");
+    } else {
+      NextPageHandler();
+    }
   };
 </script>
 
@@ -30,6 +39,7 @@
       <!-- textarea -->
       <textarea
         name="story"
+        bind:value={storySummary}
         id="story"
         cols="50"
         rows="3"
@@ -46,6 +56,7 @@
       <!-- input filed -->
       <input
         type="text"
+        bind:value={dominantEmotion}
         class="w-[15rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
     </div>
