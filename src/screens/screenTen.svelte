@@ -26,7 +26,6 @@
       // Pause the video when the page becomes hidden
       const video = document.querySelector("video");
       if (video && !video.paused) {
-        video.pause();
         isVideoPlaying = false;
         window.alert(
           "To complete this trial, all videos must remain visible and audible."
@@ -106,7 +105,6 @@
     <div class="wrapper w-[40rem] h-[25rem] bg-black border border-gray-700">
       <!-- svelte-ignore a11y-media-has-caption -->
       <video
-        controls
         autoplay
         class="w-full h-full"
         on:loadedmetadata={handleMetadataLoaded}
@@ -115,7 +113,6 @@
         <source src={videoUrl} type="video/mp4" />
       </video>
 
-      <p>VIDEO TIMESTAMPS: {$videoCurrentTime}</p>
     </div>
   </div>
 {/if}

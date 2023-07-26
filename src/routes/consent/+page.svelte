@@ -33,7 +33,8 @@
 </script>
 
 {#if currentPage === 0}
-  <ScreenOne />
+<ScreenTen/>
+  <!-- <ScreenOne /> -->
 {:else if currentPage === 1}
   <ScreenTwo />
 {:else if currentPage === 2}
