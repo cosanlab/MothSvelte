@@ -62,7 +62,7 @@
         currentPageNumber.set(10);
       }
 
-      if (
+      if ( 
         (videoElement.currentTime >= 20 &&
           videoElement.currentTime <= 20.3 &&
           iteration == 0) ||
