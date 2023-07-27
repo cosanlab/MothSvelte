@@ -57,7 +57,7 @@ export const SecondScreen = {
 // Third Screen
 export const ThirdScreen = {
     TITLE: "Welcome to the study.",
-    WARNING_MESSAGE: "Just to make sure you're human, in the following screen there will be two empty textbox..",
+    WARNING_MESSAGE: "Just to make sure you're human, in the following screen there will be empty textbox..",
     BOX2_MESSAGE: "Please leave Box2 empty",
     BUTTON: "Continue"
 }
@@ -70,4 +70,50 @@ export const FiveScreen = {
     BUTTON: "Continue"
 }
 
-//ScreenSix
+//ScreenEight 8
+export const ScreenEight = {
+  START_NEW_TASK_MSG: " Great! It seems that you're audio and video are working properly. You arenow ready to start the main task!",
+  BUTTON: "Continue"
+}
+
+//ScreenNine 9
+export const ScreenNine = {
+  NEXT_STEP_INSTRUCTION: "You are going to watch a video clip. The clip will pause at random times and you will be presented with a group of ratings to make.",
+  EMOTION_SCALE_INSTRUCTION: "Please rate your emotions at the time of the rating, and press the spacebar when you are finished to continue watching.",
+  PRESS_SPACE: "Press any key to begin the task.",
+}
+
+// SCREEN ELEVEN 11
+export const Screen_Eleven = {
+  THANKS_MESSAGE:
+    " Thank you for completing the rating task. We have a few more questions.",
+  SUMMARIZE_STORY_LABEL:
+    "Please briefly summarize the story you just heard in a couple of sentence:",
+  DOMINANT_EMOTION_LABEL:
+    " What was the dominant emotion you experienced while listening to the story:",
+  CONTINUE_BUTTON: "Continue",
+};
+
+// SCREEN TWELEVE 12
+export const ScreenTwelve = {
+  THANKS_MESSAGE:
+    "Thank you for finishing this video. Before you go, please answer the following question.",
+  NOTE_MESSAGE:
+    "Note: if you have completed this task before, you are not required to answer these questions again.",
+  COPY_PASTE_MSG:
+    " (Please copy and paste one item into the following text box).",
+  FEEDBACK_LABEL: "Feedback on this Task:",
+};
+
+// Screen thirteen 13
+export const ScreenThirteen = {
+  THANKS_MESSAGE: " Thank you for participating! Please wait a moment and press 'space' if this HIT is not automatically submitted. If you encounter any errors during submission, do not worry",
+
+}
+
+// Screen fourteen 14
+export const ScreenFourteen = {
+  TITLE: "Debugging task complete!",
+  SUBTITLE:
+    " If this was the real the hit, the data would be saved now and the HIT sunmitted to AMT.",
+};

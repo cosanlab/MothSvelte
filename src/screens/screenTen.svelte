@@ -25,8 +25,8 @@
     if (document.hidden) {
       // Pause the video when the page becomes hidden
       const video = document.querySelector("video");
-      if (video && !video.paused) {
-        isVideoPlaying = false;
+      if (video) {
+        
         window.alert(
           "To complete this trial, all videos must remain visible and audible."
         );
@@ -34,9 +34,9 @@
     } else {
       // Page is visible again, resume video if it was playing before
       const video = document.querySelector("video");
-      if (video && !isVideoPlaying) {
+      if (video ) {
         video.play();
-        isVideoPlaying = true;
+      
       }
     }
   }
@@ -92,6 +92,7 @@
   onDestroy(() => {
     if (videoElement) {
       videoElement.removeEventListener("timeupdate", timeUpdateListener); // Remove event listener on component unmount
+      window.removeEventListener(window.alert);
     }
   });
 </script>

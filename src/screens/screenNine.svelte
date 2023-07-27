@@ -1,6 +1,6 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
-
+  import {ScreenNine} from "../constants/constants"
   // removing event
   const RemovingEvent = () => {
     window.removeEventListener("keydown", NextPageHandler);
@@ -24,15 +24,13 @@
     class="wrapper text-lg mx-4 flex flex-wrap flex-col gap-3 justify-center items-center text-gray-700"
   >
     <p class="text-center">
-      You are going to watch a video clip. The clip will pause at random times
-      and you will be presented with a group of ratings to make.
+      {ScreenNine.NEXT_STEP_INSTRUCTION}
     </p>
 
     <p class="text-center">
-      Please rate your emotions at the time of the rating, and press the
-      spacebar when you are finished to continue watching.
+      {ScreenNine.EMOTION_SCALE_INSTRUCTION}
     </p>
 
-    <p>Press any key to begin the task.</p>
+    <p>{ScreenNine.PRESS_SPACE}</p>
   </div>
 </div>

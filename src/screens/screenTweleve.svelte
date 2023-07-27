@@ -1,5 +1,14 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
+  import {ScreenTwelve} from "../constants/constants"
+  // all values setter objects
+  const Questons = {
+    gender: "",
+    age: "",
+    ethnicity: "",
+    race: "",
+    feedback: "",
+  }
   // Triggered next page if everything is working correctly
   const NextPageHandler = () => {
     currentPageNumber.set(12);
@@ -7,6 +16,7 @@
 
   // Handle the click event
   const clickHandler = () => {
+    console.table(Questons)
     NextPageHandler();
   };
 </script>
@@ -17,19 +27,18 @@
     class="wrapper flex flex-col gap-7 justify-center items-center text-gray-700"
   >
     <div class="firstPart mt-2 flex flex-col justify-center items-start gap-1">
-      <p>
-        Thank you for finishing this video. Before you go, please answer the
-        following question.
+      <p class=" mx-auto">
+       {ScreenTwelve.THANKS_MESSAGE}
       </p>
       <p class="italic font-semibold">
-        Note: if you have completed this task before, you are not required to
-        answer these questions again.
+        {ScreenTwelve.NOTE_MESSAGE}
       </p>
     </div>
     <!-- gender selection -->
     <div class="center-div flex flex-col justify-center items-center gap-4">
       <h2 class="flex-wrap text-center font-bold">Your Gender:</h2>
       <input
+      bind:value={Questons.gender}
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -39,6 +48,7 @@
     <div class="center-div flex flex-col justify-center items-center gap-4">
       <h2 class="flex-wrap text-center font-bold">Your Age:</h2>
       <input
+      bind:value={Questons.age}
         type="number"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -49,7 +59,7 @@
       <h2 class="flex-wrap text-center font-bold">Your Ethnicity:</h2>
 
       <p class="flex-wrap text-center">
-        (Please copy and paste one item into the following text box)
+        {ScreenTwelve.COPY_PASTE_MSG}
       </p>
       <!-- list -->
       <ul class="list-disc my-3">
@@ -59,6 +69,7 @@
       </ul>
       <!-- input tag to enter one of the list task -->
       <input
+        bind:value={Questons.ethnicity}
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -68,7 +79,7 @@
     <div class="center-div flex flex-col justify-center items-center gap-1">
       <h2 class="flex-wrap text-center font-bold">Your Race:</h2>
       <p class="flex-wrap text-center">
-        (Please copy and paste one item into the following text box)
+       {ScreenTwelve.COPY_PASTE_MSG}
       </p>
       <!-- list -->
       <ul class="list-disc my-4 text-center">
@@ -82,6 +93,7 @@
       </ul>
       <!-- input tag to enter one of the list task -->
       <input
+        bind:value={Questons.race}
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -92,14 +104,15 @@
     <div
       class="feedback-section flex flex-col justify-center items-center gap-3"
     >
-      <p>Feedback on this Task:</p>
+      <p>{ScreenTwelve.FEEDBACK_LABEL}</p>
       <!-- feedback text area -->
       <textarea
+        bind:value={Questons.feedback}
         name="feedback"
         id="feedback"
         cols="40"
         rows="4"
-        class="border border-black"
+        class="border border-black pl-2"
       />
     </div>
     <!-- Continue button -->

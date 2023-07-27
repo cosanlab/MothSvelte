@@ -50,10 +50,10 @@
 
     <p class="flex-wrap text-center">
       Please enter the word <b class="uppercase">{randomWord }</b> in lowercase letters
-      to Box1.
+      to Box.
     </p>
 
-    <p>{ThirdScreen.BOX2_MESSAGE}</p>
+    <!-- <p>{ThirdScreen.BOX2_MESSAGE}</p> -->
 
     <button
       on:click={NextPageHandler}
