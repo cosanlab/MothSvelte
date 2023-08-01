@@ -3,7 +3,7 @@
   import {Screen_Eleven} from "../constants/constants";
   import {db} from "../config/firebase";
   import { addDoc, collection } from "firebase/firestore";
-  
+  import { loading } from "../lib/index";
     // making referernce of the   FIREBASE COLLECTION
   const QuestionRef = collection(db, "followUp-Questions");
   // temporary variables
@@ -20,10 +20,13 @@
   
   // create or store data into firebase
   const createData = async (emtion, story) => {
+    loading.set(true);
     try {
      await addDoc(QuestionRef, { dominantEmotion: emtion, storySummary: story })
+     loading.set(false);
     } catch (error) {
       console.log(error)
+      loading.set(false);
     }
   };
 
@@ -79,11 +82,26 @@
       />
     </div>
 
-    <!-- Continue button -->
+   <!-- Continue button -->
     <button
       on:click={clickHandler}
-      class="py-1 border border-gray-400 text-sm rounded-md px-3 hover:bg-gray-200"
-      >{Screen_Eleven.CONTINUE_BUTTON}
+      class={`py-1 border border-gray-400 text-sm rounded-md px-3 hover:bg-gray-200 ${
+        $loading && "bg-gray-100 px-8 "
+      }`}
+    >
+      {#if $loading}
+        <div
+          class="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-secondary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status"
+        >
+          <span
+            class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+            >Loading...</span
+          >
+        </div>
+      {:else}
+        Continue
+      {/if}
     </button>
   </div>
 </div>
