@@ -19,6 +19,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fontsource/roboto": "^5.0.5",
+		"firebase": "^10.1.0",
 		"react-icons": "^4.10.1",
 		"svelte-icons": "^2.1.0"
 	}

@@ -1,6 +1,11 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
-  import {Screen_Eleven} from "../constants/constants"
+  import {Screen_Eleven} from "../constants/constants";
+  import {db} from "../config/firebase";
+  import { addDoc, collection } from "firebase/firestore";
+  
+    // making referernce of the   FIREBASE COLLECTION
+  const QuestionRef = collection(db, "followUp-Questions");
   // temporary variables
   let question = {
      storySummary : "",
@@ -12,14 +17,24 @@
     currentPageNumber.set(11);
   };
 
+  
+  // create or store data into firebase
+  const createData = async (emtion, story) => {
+    try {
+     await addDoc(QuestionRef, { dominantEmotion: emtion, storySummary: story })
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   // Handle the click event
-  const clickHandler = () => {
+  const clickHandler = async () => {
     const trimmedStorySummary = question.storySummary.trim();
     const trimmedDominantEmotion = question.dominantEmotion.trim();
     if (!trimmedStorySummary  || !trimmedDominantEmotion) {
       window.alert("Please fill the fields for better experience");
     } else {
-      console.table(question)
+      await createData(trimmedDominantEmotion, trimmedStorySummary);
       NextPageHandler();
     }
   };

@@ -1,22 +1,48 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
-  import {ScreenTwelve} from "../constants/constants"
+  import {ScreenTwelve} from "../constants/constants";
+  import {db} from "../config/firebase";
+  import { collection, addDoc } from "firebase/firestore";
+  
+const collectionRef = collection(db, "DemographicData");
+
   // all values setter objects
-  const Questons = {
+  const demographicData = {
     gender: "",
     age: "",
     ethnicity: "",
     race: "",
     feedback: "",
   }
+
+// store form data into firebase
+  const storeData = async () => {
+    try {
+      await addDoc(collectionRef, { data: demographicData });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Triggered next page if everything is working correctly
   const NextPageHandler = () => {
     currentPageNumber.set(12);
   };
 
   // Handle the click event
-  const clickHandler = () => {
-    console.table(Questons)
+  const clickHandler = async () => {
+    //If the form is empty
+    if (
+      !demographicData.race &&
+      !demographicData.ethnicity &&
+      !demographicData.gender &&
+      !demographicData.feedback
+    ) {
+          NextPageHandler();
+          return;
+    }
+    // If the form has filled by user then store in the firebase store
+    await storeData();
     NextPageHandler();
   };
 </script>
@@ -38,7 +64,7 @@
     <div class="center-div flex flex-col justify-center items-center gap-4">
       <h2 class="flex-wrap text-center font-bold">Your Gender:</h2>
       <input
-      bind:value={Questons.gender}
+      bind:value={demographicData.gender}
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -48,7 +74,7 @@
     <div class="center-div flex flex-col justify-center items-center gap-4">
       <h2 class="flex-wrap text-center font-bold">Your Age:</h2>
       <input
-      bind:value={Questons.age}
+      bind:value={demographicData.age}
         type="number"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -69,7 +95,7 @@
       </ul>
       <!-- input tag to enter one of the list task -->
       <input
-        bind:value={Questons.ethnicity}
+        bind:value={demographicData.ethnicity}
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -93,7 +119,7 @@
       </ul>
       <!-- input tag to enter one of the list task -->
       <input
-        bind:value={Questons.race}
+        bind:value={demographicData.race}
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -107,7 +133,7 @@
       <p>{ScreenTwelve.FEEDBACK_LABEL}</p>
       <!-- feedback text area -->
       <textarea
-        bind:value={Questons.feedback}
+        bind:value={demographicData.feedback}
         name="feedback"
         id="feedback"
         cols="40"
