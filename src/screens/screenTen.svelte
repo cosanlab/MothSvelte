@@ -58,7 +58,7 @@
     if (videoElement) {
       $videoCurrentTime = videoElement.currentTime; // Update the videoCurrentTime store
       // Check if the video has reached its end
-      if ($videoCurrentTime == videoDuration) {
+      if (videoElement.ended) {
         currentPageNumber.set(10);
       }
 
@@ -92,7 +92,6 @@
   onDestroy(() => {
     if (videoElement) {
       videoElement.removeEventListener("timeupdate", timeUpdateListener); // Remove event listener on component unmount
-      window.removeEventListener(window.alert);
     }
   });
 </script>
@@ -113,7 +112,6 @@
       >
         <source src={videoUrl} type="video/mp4" />
       </video>
-
     </div>
   </div>
 {/if}
