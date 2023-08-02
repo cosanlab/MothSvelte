@@ -26,7 +26,7 @@
   // Handle the click event
   const clickHandler = () => {
     // Conditional statement for checking user input
-    if (randomValue == inputValue1 && inputValue2 == "") {
+    if (randomValue == inputValue1) {
       NextPageHandler();
     } else {
       error = true;
@@ -60,20 +60,20 @@
     <div
       class="wrapper mx-4 flex flex-col gap-7 justify-center items-center text-xl text-gray-700"
     >
-      <h1>Box 1</h1>
+      <h1>Textbox</h1>
 
       <input
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
         bind:value={inputValue1}
       />
-      <h1>Box 2</h1>
+      <!-- <h1>Box 2</h1>
 
       <input
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
          bind:value={inputValue2}
-      />
+      /> -->
 
       <button
         on:click={clickHandler}

@@ -4,19 +4,19 @@
   import { currentPageNumber } from "../../lib/pageSteps";
   import { onMount } from "svelte";
 
-  import ScreenOne from "../../screens/+screenOne.svelte";
-  import ScreenThree from "../../screens/+screenThree.svelte";
-  import ScreenTwo from "../../screens/+screenTwo.svelte";
-  import StepFour from "../../screens/+stepFour.svelte";
-  import ScreenFive from "../../screens/+screenFive.svelte";
-  import ScreenSix from "../../screens/+screenSix.svelte";
+  import ScreenOne from "../../screens/screenOne.svelte";
+  import ScreenThree from "../../screens/screenThree.svelte";
+  import ScreenTwo from "../../screens/screenTwo.svelte";
+  import StepFour from "../../screens/stepFour.svelte";
+  import ScreenFive from "../../screens/screenFive.svelte";
+  import ScreenSix from "../../screens/screenSix.svelte";
   import HumanVerificatin from "../../screens/HumanVerificatin.svelte";
-  import ScreenEight from "../../screens/+screenEight.svelte";
-  import ScreenNine from "../../screens/+screenNine.svelte";
-  import ScreenTen from "../../screens/+screenTen.svelte";
-  import ScreenEleven from "../../screens/+screenEleven.svelte";
-  import ScreenTweleve from "../../screens/+screenTweleve.svelte";
-  import ScreenThirteen from "../../screens/+screenThirteen.svelte";
+  import ScreenEight from "../../screens/screenEight.svelte";
+  import ScreenNine from "../../screens/screenNine.svelte";
+  import ScreenTen from "../../screens/screenTen.svelte";
+  import ScreenEleven from "../../screens/screenEleven.svelte";
+  import ScreenTweleve from "../../screens/screenTweleve.svelte";
+  import ScreenThirteen from "../../screens/screenThirteen.svelte";
   import ScreenFourteen from "../../screens/screenFourteen.svelte";
 
   let currentPage;
@@ -33,7 +33,7 @@
 </script>
 
 {#if currentPage === 0}
-  <ScreenOne />
+<ScreenOne />
 {:else if currentPage === 1}
   <ScreenTwo />
 {:else if currentPage === 2}
