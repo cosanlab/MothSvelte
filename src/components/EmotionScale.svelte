@@ -22,6 +22,8 @@
 
   
 
+  
+
   // Function to handle mouse out for a specific div with a delay
   function handleMouseOut(index) {
     if (!clickedDivs[index]) {
