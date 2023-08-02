@@ -18,7 +18,9 @@
       // Set the "None" div background to white on mousemove
       clickedDivs[emotions.length] = true;
     }
-  }
+  } 
+
+  
 
   
 
