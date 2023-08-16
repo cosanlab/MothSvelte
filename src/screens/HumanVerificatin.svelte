@@ -32,9 +32,13 @@
   }
 
   // Function to handle div click
-  function handleDivClick(index) {
-    clickedDivs[index] = true;
-    // Set the "None" div background to white on mousemove
+   function handleDivClick(index) {
+    if (clickedDivs[index]) {
+      clickedDivs[index] = false; // Reset click state
+      fillWidths[index] = 0; // Reset fill width
+    } else {
+      clickedDivs[index] = true;
+    }
     clickedDivs[emotions.length] = true;
   }
 
@@ -84,7 +88,7 @@
         <div
           class="box w-[400px] h-[32px] relative cursor-pointer border-2 border-black"
           on:mousemove={(e) => handleMouseMove(index, e)}
-          on:mouseout={() => handleMouseOut(index)}
+          on:mouseleave={() => handleMouseOut(index)}
           on:click={() => handleDivClick(index)}
         >
           <div

@@ -2,10 +2,11 @@
   import { currentPageNumber } from "../lib/pageSteps";
   import {ScreenTwelve} from "../constants/constants";
   import {db} from "../config/firebase";
-  import { collection, addDoc } from "firebase/firestore";
+  import { collection, addDoc, doc } from "firebase/firestore";
   import { loading } from "../lib/index";
 
-const collectionRef = collection(db, "DemographicData");
+// Replace this with your actual user ID
+  const userID = "debug45340r0wK";
 
   // all values setter objects
   const demographicData = {
@@ -20,8 +21,14 @@ const collectionRef = collection(db, "DemographicData");
   const storeData = async () => {
     loading.set(true);
     try {
-      await addDoc(collectionRef, { data: demographicData });
+      await addDoc(
+        collection(doc(collection(db, "users"), userID), "DemographicData"),
+        {
+          data: demographicData
+        }
+      );
       loading.set(false);
+
     } catch (error) {
       console.log(error);
       loading.set(false);
@@ -35,16 +42,6 @@ const collectionRef = collection(db, "DemographicData");
 
   // Handle the click event
   const clickHandler = async () => {
-    //If the form is empty
-    if (
-      !demographicData.race &&
-      !demographicData.ethnicity &&
-      !demographicData.gender &&
-      !demographicData.feedback
-    ) {
-          NextPageHandler();
-          return;
-    }
     // If the form has filled by user then store in the firebase store
     await storeData();
     NextPageHandler();

@@ -4,9 +4,10 @@
     currentPageNumber,
     EmotionScaleModel,
     videoCurrentTime,
+    videoTimeStamp
   } from "../lib/pageSteps";
   import { onMount, onDestroy } from "svelte";
-  import EmotionScale from "../components/EmotionScale.svelte";
+  import EmotionScaleMapping from "../components/EmotionScaleMapping.svelte";
 
   let videoUrl = "https://d1q27hl3unfcop.cloudfront.net/CopsDontCry.mp4";
   let videoDuration = 0;
@@ -63,14 +64,14 @@
       }
 
       if ( 
-        (videoElement.currentTime >= 20 &&
-          videoElement.currentTime <= 20.3 &&
+        (videoElement.currentTime >= 25 &&
+          videoElement.currentTime <= 25.3 &&
           iteration == 0) ||
-        (videoElement.currentTime >= 115 &&
-          videoElement.currentTime <= 115.3 &&
+        (videoElement.currentTime >= 75 &&
+          videoElement.currentTime <= 75.3 &&
           iteration == 1) ||
-        (videoElement.currentTime >= 280 &&
-          videoElement.currentTime <= 280.3 &&
+        (videoElement.currentTime >= 180 &&
+          videoElement.currentTime <= 180.3 &&
           iteration == 2) ||
         (videoElement.currentTime >= 460 &&
           videoElement.currentTime <= 460.3 &&
@@ -79,6 +80,7 @@
           videoElement.currentTime <= 610.3 &&
           iteration == 4)
       ) {
+        videoTimeStamp.set(videoElement.currentTime);
         EmotionScaleModel.set(true);
         iteration += 1;
       }
@@ -97,7 +99,7 @@
 </script>
 
 {#if $EmotionScaleModel}
-  <EmotionScale />
+  <EmotionScaleMapping />
 {:else}
   <div
     class="container w-full h-screen flex flex-col gap-4 justify-center items-center"

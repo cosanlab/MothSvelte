@@ -2,10 +2,13 @@
   import { currentPageNumber } from "../lib/pageSteps";
   import {Screen_Eleven} from "../constants/constants";
   import {db} from "../config/firebase";
-  import { addDoc, collection } from "firebase/firestore";
+  import { addDoc, collection, doc } from "firebase/firestore";
   import { loading } from "../lib/index";
-    // making referernce of the   FIREBASE COLLECTION
-  const QuestionRef = collection(db, "followUp-Questions");
+  
+
+  // Replace this with your actual user ID
+  const userID = "debug45340r0wK";
+  
   // temporary variables
   let question = {
      storySummary : "",
@@ -22,7 +25,13 @@
   const createData = async (emtion, story) => {
     loading.set(true);
     try {
-     await addDoc(QuestionRef, { dominantEmotion: emtion, storySummary: story })
+    await addDoc(
+        collection(doc(collection(db, "users"), userID), "FollowUp-Questions"),
+        {
+          dominantEmotion: emtion,
+          storySummary: story,
+        }
+      );
      loading.set(false);
     } catch (error) {
       console.log(error)
