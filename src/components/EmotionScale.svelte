@@ -1,10 +1,9 @@
 <script>
-  import { currentPageNumber, EmotionScaleModel } from "../lib/pageSteps";
+  import { EmotionScaleModel } from "../lib/pageSteps";
   import { emotions } from "../constants/emotions";
 
   // Create an array of fillWidths to store the width for each div
   let fillWidths = Array(emotions.length).fill(0);
-  // array of emotions names
   // Create an array to keep track of whether a div is clicked or not
   let clickedDivs = Array(emotions.length).fill(false);
 
@@ -19,10 +18,6 @@
       clickedDivs[emotions.length] = true;
     }
   } 
-
-  
-
-  
 
   // Function to handle mouse out for a specific div with a delay
   function handleMouseOut(index) {
