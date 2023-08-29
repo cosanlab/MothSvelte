@@ -1,12 +1,32 @@
 <script>
   import "@fontsource/roboto";
   import { currentPageNumber } from "../lib/pageSteps";
+  import { userID } from "../lib/index";
   import { FirstScreen } from "../constants/constants";
+  import { onMount } from "svelte";
   // NextPage
 
   const NextPageHandler = () => {
     currentPageNumber.set(1);
   };
+
+  // to generate random ID
+  function generateRandomString(length) {
+    const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    return "debug" + result;
+  }
+
+
+  onMount(()=>{
+// Generate a random string
+    const randomString = generateRandomString(7);
+    userID.set(randomString)
+  })
 </script>
 
 <div class="container w-full h-screen flex justify-center mt-5">
