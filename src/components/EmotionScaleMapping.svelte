@@ -1,6 +1,7 @@
 <script>
   import { EmotionScaleModel, videoTimeStamp, selectedRecords, showSelectedPoints } from "../lib/pageSteps";
   import { emotions } from "../constants/emotions";
+  import { userID } from "../lib/index";
   import {db} from "../config/firebase";
   import { collection, doc, setDoc } from "firebase/firestore";
   import { onMount } from "svelte";
@@ -10,8 +11,7 @@
   let selectedTabs = [];
   let timestamps = "";
 
-  // Replace this with your actual user ID
-  const userID = "debug45340r0wK";
+
 // logic has used in onMount function to get and convert the videoBreakPoint into string and save it in database accordingly.
   onMount(()=>{
     if($videoTimeStamp > 60){
@@ -72,7 +72,7 @@
 
     // Construct the document reference
     const timestampDocRef = doc(
-      collection(doc(collection(db, "users"), userID), "Ratings"),
+      collection(doc(collection(db, "users"), $userID), "ratings"),
       timestamps
     );
     // Use the set function to store data

@@ -1,14 +1,12 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
+  import { userID } from "../lib/index";
   import {Screen_Eleven} from "../constants/constants";
   import {db} from "../config/firebase";
   import { addDoc, collection, doc } from "firebase/firestore";
   import { loading } from "../lib/index";
   
-
-  // Replace this with your actual user ID
-  const userID = "debug45340r0wK";
-  
+ 
   // temporary variables
   let question = {
      storySummary : "",
@@ -26,7 +24,7 @@
     loading.set(true);
     try {
     await addDoc(
-        collection(doc(collection(db, "users"), userID), "FollowUp-Questions"),
+        collection(doc(collection(db, "users"), $userID), "FollowUp-Questions"),
         {
           dominantEmotion: emtion,
           storySummary: story,

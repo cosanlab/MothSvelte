@@ -1,13 +1,16 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
+  import { verifyEmotionName } from "../lib/index";
   import { emotions } from "../constants/emotions";
+  import VerifyEmotionError from "../components/verifyEmotionError.svelte";
 
   // Create an array of fillWidths to store the width for each div
   let fillWidths = Array(emotions.length).fill(0);
-  // array of emotions names
   // Create an array to keep track of whether a div is clicked or not
   let clickedDivs = Array(emotions.length).fill(false);
-
+  // Create an array to store selected emotions
+  let selectedEmotions = [];
+  let showErrorPage = false;
   // Function to handle mouse move for a specific div
   function handleMouseMove(index, event) {
     if (!clickedDivs[index]) {
@@ -20,8 +23,6 @@
     }
   }
 
-  
-
   // Function to handle mouse out for a specific div with a delay
   function handleMouseOut(index) {
     if (!clickedDivs[index]) {
@@ -32,20 +33,35 @@
   }
 
   // Function to handle div click
-   function handleDivClick(index) {
+  function handleDivClick(index) {
     if (clickedDivs[index]) {
       clickedDivs[index] = false; // Reset click state
       fillWidths[index] = 0; // Reset fill width
+      // Remove the emotion from selectedEmotions array
+      selectedEmotions = selectedEmotions.filter((emotion) => emotion !== emotions[index]);
     } else {
       clickedDivs[index] = true;
+      // Add the emotion to selectedEmotions array
+      selectedEmotions = [...selectedEmotions, emotions[index]];
     }
     clickedDivs[emotions.length] = true;
   }
 
   // Function to be called when pressing "Space" button
   function nextPage() {
-    currentPageNumber.set(7);
-    RemovingEvent();
+    // Verify selected emotions using verifyEmotionName function
+    // const isCorrect = verifyEmotionName(selectedEmotions);
+    const isCorrect = selectedEmotions.includes($verifyEmotionName)
+    console.log(isCorrect);
+   
+    // Based on the result, proceed to the next page or handle accordingly
+    if (isCorrect) {
+      currentPageNumber.set(7);
+      RemovingEvent();
+    } else {
+      // Handle incorrect selection
+      showErrorPage = true;
+    }
   }
 
   // Event listener function for "Space" key press
@@ -64,6 +80,10 @@
   }
 </script>
 
+<!-- ... your HTML template ... -->
+{#if showErrorPage}
+  <VerifyEmotionError/>
+{:else}
 <div class="container w-full h-full flex justify-center items-center">
   <div class="wrapper mt-10 flex justify-center flex-col gap-1">
     <div class="instruction mb-3 text-[19px]">
@@ -104,6 +124,7 @@
     <p class="mt-3 text-[19px]">Press "space" when finished</p>
   </div>
 </div>
+{/if}
 
 <style>
   .emotion_tab {
