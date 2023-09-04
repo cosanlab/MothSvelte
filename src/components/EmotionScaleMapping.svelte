@@ -1,7 +1,7 @@
 <script>
   import { EmotionScaleModel, videoTimeStamp, selectedRecords, showSelectedPoints } from "../lib/pageSteps";
   import { emotions } from "../constants/emotions";
-  import { userID } from "../lib/index";
+  import { userID,hitId } from "../lib/index";
   import {db} from "../config/firebase";
   import { collection, doc, setDoc } from "firebase/firestore";
   import { onMount } from "svelte";
@@ -72,7 +72,7 @@
 
     // Construct the document reference
     const timestampDocRef = doc(
-      collection(doc(collection(db, "users"), $userID), "ratings"),
+      collection(doc(collection(db, $hitId), $userID), "ratings"),
       timestamps
     );
     // Use the set function to store data

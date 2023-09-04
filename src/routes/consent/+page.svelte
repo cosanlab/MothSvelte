@@ -20,10 +20,13 @@
   import ScreenFourteen from "../../screens/screenFourteen.svelte";
 
   let currentPage;
+  
   // function definition to change the document title
   const ChangeTitle = () => {
     document.title = "Psychology Experiment - Informed Consent Form";
   };
+
+
   onMount(() => {
     currentPageNumber.subscribe((value) => {
       currentPage = value;
@@ -33,8 +36,7 @@
 </script>
 
 {#if currentPage === 0}
-<ScreenTen/>
-  <!-- <ScreenOne /> -->
+  <ScreenOne />
 {:else if currentPage === 1}
   <ScreenTwo />
 {:else if currentPage === 2}
