@@ -20,11 +20,37 @@
   import ScreenFourteen from "../../screens/screenFourteen.svelte";
 
   let currentPage;
+  // let queryString;
+  // let hitId;
+  // let workerId;
   // function definition to change the document title
   const ChangeTitle = () => {
     document.title = "Psychology Experiment - Informed Consent Form";
   };
+
+  // getting url parameters
+   const getParams = () => {
+    const params = new URLSearchParams(location.search);
+   
+    return params;
+  };
+
+  // onMount method is just like useEffect
   onMount(() => {
+    //  queryString = window.location.search.slice(1);
+    // if(queryString == ""){
+    //   console.log('There are no URL Parameters')
+    // }else{
+    // console.log(queryString)
+    // }
+    //   const params = getParams();
+    //    hitId = params.get("hitId");
+    //    workerId =params.get("workerId"); 
+    //   console.log("WORKER ID:", workerId)
+    //   console.log("HitID:", hitId)
+
+    
+
     currentPageNumber.subscribe((value) => {
       currentPage = value;
       ChangeTitle();
