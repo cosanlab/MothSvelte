@@ -16,7 +16,7 @@
       window.innerHeight + 80
     },left=0,top=0`;
 
-    window.open(`/consent?${queryString}`, windowFeatures);
+    window.open(`/consent?${queryString}`,"popupWindow", windowFeatures);
   };
 
   // getting url parameters
@@ -24,7 +24,8 @@
     const params = new URLSearchParams(location.search);
     return params;
   };
-  // onMount is just like useEffect directly call when the page is rendered
+
+
   onMount(() => {
     queryString = window.location.search.slice(1);
     if (queryString == "") {
@@ -34,7 +35,6 @@
     }
 
     const params = getParams();
-
     hitID = params.get("hitId");
     hitId.set(params.get("hitId"));
     console.log("HitID:", hitID);
@@ -42,8 +42,9 @@
     workerId = params.get("workerId");
     userID.set(params.get("workerId"));
     console.log("WORKER ID:", workerId);
-    
+
   });
+  
 </script>
 
 <div class="container w-full h-full mt-8 ml-2 md:ml-6">
