@@ -27,7 +27,9 @@
       const video = document.querySelector("video");
       if (video) {
         video.pause();
-        alert("For a better experience, please stay on this page.");
+         window.alert(
+          "To complete this trial, all videos must remain visible and audible."
+        );
       }
     }
   }
@@ -38,7 +40,7 @@
   }
 
   // Add event listener for visibility change
-  document.addEventListener("visibilitychange", handleVisibilityChange);
+  // document.addEventListener("visibilitychange", handleVisibilityChange);
 
   // Call the selectRandomMedia function when the component mounts
   onMount(() => {

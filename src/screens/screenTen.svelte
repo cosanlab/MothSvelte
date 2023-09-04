@@ -8,26 +8,31 @@
   } from "../lib/pageSteps";
   import { onMount, onDestroy } from "svelte";
   import EmotionScaleMapping from "../components/EmotionScaleMapping.svelte";
+  import {MediaFiles} from "../constants/Media";
+  console.log(MediaFiles)
 
-  let videoUrl = "https://d1q27hl3unfcop.cloudfront.net/CopsDontCry.mp4";
+  let videoUrl = "";
   let videoDuration = 0;
   let videoElement; // Reference to the video element
   let timeUpdateListener;
   let iteration = 0;
    let isVideoPlaying = true;
-  // Array to store timestamps for emotion component display
-  const emotionTimestamps = [
-    { start: 5, end: 5.3 },
-    { start: 10, end: 10.3 },
-    { start: 41.5, end: 42 },
-  ];
+  let VideotimeStamps = [];
+  
+  // Function to select a random object from the array
+  function selectRandomMedia() {
+    const randomIndex = Math.floor(Math.random() * MediaFiles.length);
+    videoUrl = MediaFiles[randomIndex].media;
+    console.log(videoUrl)
+    VideotimeStamps = MediaFiles[randomIndex].timeStamps; // 
+    console.log(VideotimeStamps);
+  }
 
  function handleVisibilityChange() {
     if (document.hidden) {
-      // Pause the video when the page becomes hidden
       const video = document.querySelector("video");
+      // Pause the video when the page becomes hidden
       if (video) {
-        
         window.alert(
           "To complete this trial, all videos must remain visible and audible."
         );
@@ -63,31 +68,25 @@
         currentPageNumber.set(10);
       }
 
+      // loop the videoTimeStamp to find the exact TimeStamp
+      for(let i = 0; i < VideotimeStamps.length; i++){
       if ( 
-        (videoElement.currentTime >= 25 &&
-          videoElement.currentTime <= 25.3 &&
-          iteration == 0) ||
-        (videoElement.currentTime >= 75 &&
-          videoElement.currentTime <= 75.3 &&
-          iteration == 1) ||
-        (videoElement.currentTime >= 180 &&
-          videoElement.currentTime <= 180.3 &&
-          iteration == 2) ||
-        (videoElement.currentTime >= 460 &&
-          videoElement.currentTime <= 460.3 &&
-          iteration == 3) ||
-        (videoElement.currentTime >= 610 &&
-          videoElement.currentTime <= 610.3 &&
-          iteration == 4)
+        (videoElement.currentTime >= VideotimeStamps[i].start &&
+          videoElement.currentTime <= VideotimeStamps[i].end &&
+          iteration == i) 
       ) {
         videoTimeStamp.set(videoElement.currentTime);
         EmotionScaleModel.set(true);
         iteration += 1;
+        break; // Exit the loop after finding the matching timestamp
       }
+      }
+
     }
   }
 
   onMount(() => {
+    selectRandomMedia();
     handleMetadataLoaded();
   });
 

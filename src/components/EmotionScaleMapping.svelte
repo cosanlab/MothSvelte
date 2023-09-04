@@ -111,6 +111,7 @@
   const spaceKeyPressHandler = async (event) => {
     if (event.key === " ") {
       await nextPage();
+      RemovingEvent();
     }
   };
 
