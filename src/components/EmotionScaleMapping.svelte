@@ -11,9 +11,10 @@
   let selectedTabs = [];
   let timestamps = "";
 
-
 // logic has used in onMount function to get and convert the videoBreakPoint into string and save it in database accordingly.
   onMount(()=>{
+    console.log(`hitID: ${$hitId} || workedId: ${$userID}`)
+
     if($videoTimeStamp > 60){
       let timeMin = $videoTimeStamp / 60;
       let temp = timeMin.toFixed(2);

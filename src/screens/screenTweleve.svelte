@@ -1,7 +1,7 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
   import {ScreenTwelve} from "../constants/constants";
-  import { userID } from "../lib/index";
+  import { userID, hitId } from "../lib/index";
   import {db} from "../config/firebase";
   import { collection, addDoc, doc } from "firebase/firestore";
   import { loading } from "../lib/index";
@@ -20,7 +20,7 @@
     loading.set(true);
     try {
       await addDoc(
-        collection(doc(collection(db, "users"), $userID), "DemographicData"),
+        collection(doc(collection(db, $hitId), $userID), "DemographicData"),
         {
           data: demographicData
         }

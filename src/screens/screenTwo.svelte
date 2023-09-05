@@ -16,6 +16,7 @@
 
   // Add the on:keydown event handler to the window object
   window.addEventListener("keydown", NextPageHandler);
+
 </script>
 
 <!-- CONTENT SECTION -->

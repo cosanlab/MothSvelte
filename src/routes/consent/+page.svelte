@@ -2,6 +2,7 @@
 <script>
   import "@fontsource/roboto";
   import { currentPageNumber } from "../../lib/pageSteps";
+  
   import { onMount } from "svelte";
 
   import ScreenOne from "../../screens/screenOne.svelte";
@@ -28,6 +29,7 @@
 
 
   onMount(() => {
+   
     currentPageNumber.subscribe((value) => {
       currentPage = value;
       ChangeTitle();
