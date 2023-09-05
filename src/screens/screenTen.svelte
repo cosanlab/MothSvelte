@@ -67,7 +67,11 @@
       if (videoElement.ended) {
         currentPageNumber.set(10);
       }
-
+     
+      // temporary one
+      if(iteration == 2){
+        currentPageNumber.set(10);
+      }
       // loop the videoTimeStamp to find the exact TimeStamp
       for(let i = 0; i < VideotimeStamps.length; i++){
       if ( 
