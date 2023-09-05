@@ -3,12 +3,8 @@
   import "@fontsource/roboto";
   import { SecondPage } from "../constants/constants";
   import { onMount } from "svelte";
-  import { userID, hitId } from "../lib/index";
-
+ 
   let queryString;
-  let hitID;
-  let workerId;
-
   //--------- Open New Window -------
   const openNewWindow = () => {
     const customWidth = 1100; // Set your desired custom width here
@@ -16,13 +12,7 @@
       window.innerHeight + 80
     },left=0,top=0`;
 
-    window.open(`/consent?${queryString}`,"popupWindow", windowFeatures);
-  };
-
-  // getting url parameters
-  const getParams = () => {
-    const params = new URLSearchParams(location.search);
-    return params;
+    window.open(`/consent?${queryString}`, "popupWindow", windowFeatures);
   };
 
 
@@ -34,17 +24,7 @@
       console.log(queryString);
     }
 
-    const params = getParams();
-    hitID = params.get("hitId");
-    hitId.set(params.get("hitId"));
-    console.log("HitID:", hitID);
-
-    workerId = params.get("workerId");
-    userID.set(params.get("workerId"));
-    console.log("WORKER ID:", workerId);
-
   });
-  
 </script>
 
 <div class="container w-full h-full mt-8 ml-2 md:ml-6">

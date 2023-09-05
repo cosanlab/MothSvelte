@@ -1,6 +1,6 @@
 <script>
   import { currentPageNumber } from "../lib/pageSteps";
-  import { userID } from "../lib/index";
+  import { userID,hitId } from "../lib/index";
   import {Screen_Eleven} from "../constants/constants";
   import {db} from "../config/firebase";
   import { addDoc, collection, doc } from "firebase/firestore";
@@ -24,7 +24,7 @@
     loading.set(true);
     try {
     await addDoc(
-        collection(doc(collection(db, "users"), $userID), "FollowUp-Questions"),
+        collection(doc(collection(db, $hitId), $userID), "FollowUp-Questions"),
         {
           dominantEmotion: emtion,
           storySummary: story,
