@@ -1,8 +1,14 @@
 <script>
-  import { EmotionScaleModel, videoTimeStamp, selectedRecords, showSelectedPoints } from "../lib/pageSteps";
+  import {
+    EmotionScaleModel,
+    videoTimeStamp,
+    selectedRecords,
+    showSelectedPoints,
+    videoURL,
+  } from "../store/pageSteps";
   import { emotions } from "../constants/emotions";
-  import { userID,hitId } from "../lib/index";
-  import {db} from "../config/firebase";
+  import { userID, hitId, videoRefrence } from "../store/index";
+  import { db } from "../config/firebase";
   import { collection, doc, setDoc } from "firebase/firestore";
   import { onMount } from "svelte";
 
@@ -10,24 +16,29 @@
   let clickedDivs = Array(emotions.length).fill(false);
   let selectedTabs = [];
   let timestamps = "";
+  let videoRef = "";
 
-// logic has used in onMount function to get and convert the videoBreakPoint into string and save it in database accordingly.
-  onMount(()=>{
-    console.log(`hitID: ${$hitId} || workedId: ${$userID}`)
+  onMount(() => {
+    // splitting video url for saving in database
+    // Split the URL by '/' and get the last part (the filename)
+    const parts = $videoURL.split("/");
+    videoRef = parts[parts.length - 1];
+    videoRefrence.set(videoRef);
 
-    if($videoTimeStamp > 60){
+    // setting timestamps for video
+    if ($videoTimeStamp > 60) {
       let timeMin = $videoTimeStamp / 60;
       let temp = timeMin.toFixed(2);
-       let formatted = temp.replace(".", ":");
+      let formatted = temp.replace(".", ":");
       timestamps = formatted.toString();
-    }else{
+    } else {
       let temp = $videoTimeStamp.toFixed(0);
       let conversionToString = temp.toString();
       // Format timestamps as "0:timestamps"
       timestamps = "0:" + conversionToString;
-      console.log(timestamps)
+    
     }
-  })
+  });
   // onMouseMove function to fill div with mentioned color
   function handleMouseMove(index, event) {
     if (!clickedDivs[index]) {
@@ -59,7 +70,7 @@
     clickedDivs[emotions.length] = true;
   }
   // Remove function should be called immediately when the fired space and complete the actions accordingly
- function RemovingEvent() {
+  function RemovingEvent() {
     window.removeEventListener("keydown", spaceKeyPressHandler);
   }
   // storing data function for to  create or store data in the firebase.
@@ -71,12 +82,20 @@
       [emotion]: latestArray[index],
     }));
 
-    // Construct the document reference
+    // concating
+    const ratingRef = "cloudfront.net/" + videoRef;
     const timestampDocRef = doc(
-      collection(doc(collection(db, $hitId), $userID), "ratings"),
+      db,
+      "study",
+      $hitId,
+      "users",
+      $userID,
+      videoRef,
+      "ratings",
+      videoRef,
       timestamps
     );
-    // Use the set function to store data
+
     try {
       await setDoc(timestampDocRef, {
         EmotionScale: mergedArray, // Add the merged array data
@@ -85,7 +104,6 @@
     } catch (error) {
       console.error("Error storing data:", error);
     }
-
   };
 
   // Inside the nextPage() function:
@@ -101,7 +119,6 @@
 
     fillWidths = fillWidths.map(() => 0);
     clickedDivs = clickedDivs.map(() => false);
-    console.log($selectedRecords)
     // calling a method to store data in databse.
     EmotionScaleModel.set(false);
     await StoringData();
@@ -116,7 +133,7 @@
     }
   };
 
-  window.addEventListener("keydown", spaceKeyPressHandler); 
+  window.addEventListener("keydown", spaceKeyPressHandler);
 </script>
 
 <div class="container w-full h-full flex justify-center items-center">

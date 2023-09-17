@@ -4,31 +4,39 @@
     currentPageNumber,
     EmotionScaleModel,
     videoCurrentTime,
-    videoTimeStamp
-  } from "../lib/pageSteps";
+    videoTimeStamp,
+    videoURL,
+  } from "../store/pageSteps";
+  import { FilteredVideos, VideosURLs} from "../store/index";
+
   import { onMount, onDestroy } from "svelte";
   import EmotionScaleMapping from "../components/EmotionScaleMapping.svelte";
-  import {MediaFiles} from "../constants/Media";
-  console.log(MediaFiles)
+  import { Spacing, EndSpace, StartSpace, SampleRate } from "../store/index";
 
   let videoUrl = "";
   let videoDuration = 0;
   let videoElement; // Reference to the video element
   let timeUpdateListener;
   let iteration = 0;
-   let isVideoPlaying = true;
-  let VideotimeStamps = [];
-  
+  // -------------- stim - paramaters ---------------
+
+  let sampleRate = $SampleRate;
+  let spacing = $Spacing;
+  let startSpace = $StartSpace;
+  let endSpace = $EndSpace;
+  let stimLength = 0;
+  let breaks = [];
+
   // Function to select a random object from the array
   function selectRandomMedia() {
-    const randomIndex = Math.floor(Math.random() * MediaFiles.length);
-    videoUrl = MediaFiles[randomIndex].media;
-    console.log(videoUrl)
-    VideotimeStamps = MediaFiles[randomIndex].timeStamps; // 
-    console.log(VideotimeStamps);
+    const randomIndex = Math.floor(Math.random() * $FilteredVideos.length);
+    videoUrl = $FilteredVideos[randomIndex];
+    const parts = videoUrl.split(".");
+    const extractedPart = parts.slice(1).join(".");
+    videoURL.set(extractedPart);
   }
 
- function handleVisibilityChange() {
+  function handleVisibilityChange() {
     if (document.hidden) {
       const video = document.querySelector("video");
       // Pause the video when the page becomes hidden
@@ -40,9 +48,8 @@
     } else {
       // Page is visible again, resume video if it was playing before
       const video = document.querySelector("video");
-      if (video ) {
+      if (video) {
         video.play();
-      
       }
     }
   }
@@ -53,6 +60,12 @@
   function handleMetadataLoaded() {
     if (videoElement) {
       videoDuration = videoElement.duration; // Get the video duration in seconds
+      stimLength = videoDuration.toFixed(0);
+
+      if (stimLength > 0) {
+        calculateBreaks();
+      }
+      console.log(stimLength);
       videoElement.currentTime = $videoCurrentTime; // Set the initial video time
       timeUpdateListener = updateTime;
       videoElement.addEventListener("timeupdate", timeUpdateListener); // Add event listener for time updates
@@ -67,28 +80,68 @@
       if (videoElement.ended) {
         currentPageNumber.set(10);
       }
-     
-      // temporary one
-      if(iteration == 2){
-        currentPageNumber.set(10);
-      }
-      // loop the videoTimeStamp to find the exact TimeStamp
-      for(let i = 0; i < VideotimeStamps.length; i++){
-      if ( 
-        (videoElement.currentTime >= VideotimeStamps[i].start &&
-          videoElement.currentTime <= VideotimeStamps[i].end &&
-          iteration == i) 
-      ) {
-        videoTimeStamp.set(videoElement.currentTime);
-        EmotionScaleModel.set(true);
-        iteration += 1;
-        break; // Exit the loop after finding the matching timestamp
-      }
-      }
 
+      // temporary one
+      // if (iteration == 2) {
+      //   currentPageNumber.set(10);
+      // }
+      // loop the videoTimeStamp to find the exact TimeStamp
+      for (let i = 0; i < breaks.length; i++) {
+        if (
+          videoElement.currentTime >= breaks[i] &&
+          videoElement.currentTime >= breaks[i] + 0.3 &&
+          iteration == i
+        ) {
+          videoTimeStamp.set(videoElement.currentTime);
+          EmotionScaleModel.set(true);
+          iteration += 1;
+          break; // Exit the loop after finding the matching timestamp
+        }
+      }
     }
   }
 
+  //--------------- Stim - Paramaters ---------------
+  // Function to calculate breaks
+  function calculateBreaks() {
+    let numBreaks = Math.floor(stimLength / sampleRate);
+    let availableTimesRange = {
+      start: startSpace,
+      end: stimLength - endSpace,
+    };
+
+    while (breaks.length < numBreaks) {
+      let randomTime = getRandomTime(availableTimesRange);
+      let minSpace = getMinSpace(breaks, randomTime);
+
+      // Check if the minimum space between breaks is greater than or equal to spacing
+      if (minSpace >= spacing) {
+        breaks.push(randomTime);
+        breaks.sort((a, b) => a - b); // Sort the breaks in ascending order
+      }
+    }
+
+    // console.log(breaks);
+  }
+
+  // Function to calculate the minimum space between the new break and existing breaks
+  function getMinSpace(existingBreaks, newBreak) {
+    let minSpace = Infinity;
+    for (let i = 0; i < existingBreaks.length; i++) {
+      let space = Math.abs(existingBreaks[i] - newBreak);
+      if (space < minSpace) {
+        minSpace = space;
+      }
+    }
+    return minSpace;
+  }
+
+  // Function to generate a random time within the available times range
+  function getRandomTime(range) {
+    return range.start + Math.random() * (range.end - range.start);
+  }
+
+  //------------- onMount ----------------
   onMount(() => {
     selectRandomMedia();
     handleMetadataLoaded();

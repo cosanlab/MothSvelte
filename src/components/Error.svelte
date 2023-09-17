@@ -1,6 +1,6 @@
 <script>
     import "@fontsource/roboto";
-import { currentPageNumber } from "../lib/pageSteps";
+import { currentPageNumber } from "../store/pageSteps";
 
 
 // removing event 

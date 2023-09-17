@@ -1,8 +1,11 @@
 <script>
   import "@fontsource/roboto";
-  import { currentPageNumber } from "../lib/pageSteps";
+  import { currentPageNumber } from "../store/pageSteps";
+  import { VideosURLs, WatchedVideos } from "../store/index";
   import { SecondScreen } from "../constants/constants";
-
+  import { onMount } from "svelte";
+import { db } from "../config/firebase";
+  import { collection, doc, setDoc, getDocs, query, where } from "firebase/firestore";
   // removing event
   const RemovingEvent = () => {
     window.removeEventListener("keydown", NextPageHandler);
@@ -17,6 +20,32 @@
   // Add the on:keydown event handler to the window object
   window.addEventListener("keydown", NextPageHandler);
 
+   
+  // getting data from firebase
+  const RetrieveData = async() =>{
+    // Reference to the "video-URLs" collection within "systemAssets"
+ const videoRef = collection(db, "systemAssets");
+ let queryRef = videoRef;
+ queryRef = query(videoRef, where("__name__", "==", "videos-URLs"));
+
+let querySnapshot = await getDocs(queryRef);
+const files = []; // Initialize an empty array to store heartbeat values
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const id =doc.id
+      const file = { id,...data };
+      files.push(file);
+      
+    });
+    // setting videos urls in videourls store
+      VideosURLs.set(files[0].videos)
+
+  }
+
+onMount(async()=>{
+
+ RetrieveData();
+})
 </script>
 
 <!-- CONTENT SECTION -->

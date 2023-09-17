@@ -1,6 +1,6 @@
 <script>
-  import { currentPageNumber } from "../lib/pageSteps";
-  import { verifyEmotionName } from "../lib/index";
+  import { currentPageNumber } from "../store/pageSteps";
+  import { verifyEmotionName } from "../store/index";
   import { emotions } from "../constants/emotions";
   import VerifyEmotionError from "../components/verifyEmotionError.svelte";
 

@@ -1,5 +1,5 @@
 <script>
-  import { currentPageNumber } from "../lib/pageSteps";
+  import { currentPageNumber } from "../store/pageSteps";
   import {ScreenNine} from "../constants/constants"
   // removing event
   const RemovingEvent = () => {

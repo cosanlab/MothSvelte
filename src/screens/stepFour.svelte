@@ -1,15 +1,24 @@
 <script>
   import "@fontsource/roboto";
-  import { currentPageNumber, randomNumber, trialTimes } from "../lib/pageSteps";
+  import {
+    currentPageNumber,
+    randomNumber,
+    trialTimes,
+  } from "../store/pageSteps";
   import { onMount } from "svelte";
+  import { userID, hitId, VideosURLs, WatchedVideos, FilteredVideos } from "../store/index";
+  
   import Error from "../components/Error.svelte";
   import TrialFinishedError from "../components/TrialFinishedError.svelte";
+  import { db } from "../config/firebase";
+
   //   variables for different actions and purpose
   let error = false;
   let inputValue1 = "";
   let inputValue2 = "";
   let randomValue = "";
   let trial_Times = 0;
+  let attempt = "attempted1";
   // checking user input that whether it is same with previous displayed value or not
   const checkingUserInput = () => {
     // getting previous display value from store
@@ -26,30 +35,43 @@
   // Handle the click event
   const clickHandler = () => {
     // Conditional statement for checking user input
-    if (randomValue == inputValue1) {
+    if (randomValue == inputValue1 && inputValue2 == "") {
       NextPageHandler();
     } else {
       error = true;
-      trialTimes.set(++trial_Times)
+      trialTimes.set(++trial_Times);
     }
   };
   // increment trial times
   const IncrementTrialTimes = () => {
-     trialTimes.subscribe((value) => {
+    trialTimes.subscribe((value) => {
       trial_Times = value;
     });
-  }
+  };
+  
+// ---------- Filtering videosUrls --------
+const  FilteringVideosURLs = () =>{
+// Extract the last part of each URL in arr1
+    let arr1LastParts = $VideosURLs.map((url) => url.split("/").pop());
+    
+    let updatedArr = $VideosURLs.filter(
+      (item) => !$WatchedVideos.includes(item.split("/").pop())
+    );
+    FilteredVideos.set(updatedArr)
+}
 
+  // onMount which is called whenever component is rendered
   onMount(() => {
     IncrementTrialTimes();
     checkingUserInput();
+    FilteringVideosURLs();
   });
 </script>
 
 <!-- JSX Section -->
 {#if error}
   {#if trial_Times > 3}
-    <TrialFinishedError/>
+    <TrialFinishedError />
   {:else}
     <Error />
   {/if}
@@ -67,13 +89,12 @@
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
         bind:value={inputValue1}
       />
-      <!-- <h1>Box 2</h1>
 
       <input
         type="text"
-        class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
-         bind:value={inputValue2}
-      /> -->
+        class="TextBOX2 hidden w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
+        bind:value={inputValue2}
+      />
 
       <button
         on:click={clickHandler}

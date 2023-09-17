@@ -1,5 +1,5 @@
 <script>
-  import { currentPageNumber, randomNumber } from "../lib/pageSteps";
+  import { currentPageNumber } from "../store/pageSteps";
   import { FiveScreen } from "../constants/constants";
   //---- function method to triggered next page whenever user click on continue button
   const NextPageHandler = () => {

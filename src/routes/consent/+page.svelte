@@ -1,7 +1,7 @@
 <!-- SCREEN ONE AFTER POP UP -->
 <script>
   import "@fontsource/roboto";
-  import { currentPageNumber } from "../../lib/pageSteps";
+  import { currentPageNumber } from "../../store/pageSteps";
   
   import { onMount } from "svelte";
 
@@ -38,6 +38,7 @@
 </script>
 
 {#if currentPage === 0}
+<!-- <StepFour /> -->
   <ScreenOne />
 {:else if currentPage === 1}
   <ScreenTwo />

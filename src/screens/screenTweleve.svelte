@@ -1,10 +1,10 @@
 <script>
-  import { currentPageNumber } from "../lib/pageSteps";
-  import {ScreenTwelve} from "../constants/constants";
-  import { userID, hitId } from "../lib/index";
-  import {db} from "../config/firebase";
-  import { collection, addDoc, doc } from "firebase/firestore";
-  import { loading } from "../lib/index";
+  import { currentPageNumber } from "../store/pageSteps";
+  import { ScreenTwelve } from "../constants/constants";
+  import { userID, hitId } from "../store/index";
+  import { db } from "../config/firebase";
+  import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+  import { loading, videoRefrence} from "../store/index";
 
   // all values setter objects
   const demographicData = {
@@ -13,26 +13,34 @@
     ethnicity: "",
     race: "",
     feedback: "",
-  }
+  };
 
-// store form data into firebase
+  let attempt = "attempted1";
+  // store form data into firebase
   const storeData = async () => {
     loading.set(true);
-    try {
-      await addDoc(
-        collection(doc(collection(db, $hitId), $userID), "DemographicData"),
-        {
-          data: demographicData
-        }
-      );
-      loading.set(false);
 
+    const demographicDataRef = doc(
+      db,
+      "study",
+      $hitId,
+      "users",
+      $userID,
+      $videoRefrence,
+      "DemographicData"
+    );
+
+    try {
+      await setDoc(demographicDataRef, {
+        data: demographicData,
+      });
+      loading.set(false);
+      console.log("Data stored successfully");
     } catch (error) {
       console.log(error);
       loading.set(false);
     }
   };
-
   // Triggered next page if everything is working correctly
   const NextPageHandler = () => {
     currentPageNumber.set(12);
@@ -53,7 +61,7 @@
   >
     <div class="firstPart mt-2 flex flex-col justify-center items-start gap-1">
       <p class=" mx-auto">
-       {ScreenTwelve.THANKS_MESSAGE}
+        {ScreenTwelve.THANKS_MESSAGE}
       </p>
       <p class="italic font-semibold">
         {ScreenTwelve.NOTE_MESSAGE}
@@ -63,7 +71,7 @@
     <div class="center-div flex flex-col justify-center items-center gap-4">
       <h2 class="flex-wrap text-center font-bold">Your Gender:</h2>
       <input
-      bind:value={demographicData.gender}
+        bind:value={demographicData.gender}
         type="text"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -73,7 +81,7 @@
     <div class="center-div flex flex-col justify-center items-center gap-4">
       <h2 class="flex-wrap text-center font-bold">Your Age:</h2>
       <input
-      bind:value={demographicData.age}
+        bind:value={demographicData.age}
         type="number"
         class="w-[11rem] text-sm p-2 h-6 border border-gray-900 rounded-sm"
       />
@@ -104,7 +112,7 @@
     <div class="center-div flex flex-col justify-center items-center gap-1">
       <h2 class="flex-wrap text-center font-bold">Your Race:</h2>
       <p class="flex-wrap text-center">
-       {ScreenTwelve.COPY_PASTE_MSG}
+        {ScreenTwelve.COPY_PASTE_MSG}
       </p>
       <!-- list -->
       <ul class="list-disc my-4 text-center">
