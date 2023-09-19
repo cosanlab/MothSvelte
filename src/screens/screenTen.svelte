@@ -83,9 +83,9 @@
       }
 
       // temporary one
-      if (iteration == 2) {
-        currentPageNumber.set(10);
-      }
+      // if (iteration == 2) {
+      //   currentPageNumber.set(10);
+      // }
 
       // loop the videoTimeStamp to find the exact TimeStamp
       for (let i = 0; i < breaks.length; i++) {
@@ -169,7 +169,6 @@
       <!-- svelte-ignore a11y-media-has-caption -->
       <video
         autoplay
-        controls
         class="w-full h-full"
         on:loadedmetadata={handleMetadataLoaded}
         bind:this={videoElement}
