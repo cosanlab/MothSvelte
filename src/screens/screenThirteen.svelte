@@ -1,5 +1,5 @@
 <script>
-  import { currentPageNumber } from "../lib/pageSteps";
+  import { currentPageNumber } from "../store/pageSteps";
   import {ScreenThirteen} from "../constants/constants";
   import {goto} from "$app/navigation";
 

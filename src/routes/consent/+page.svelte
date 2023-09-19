@@ -1,13 +1,13 @@
 <!-- SCREEN ONE AFTER POP UP -->
 <script>
   import "@fontsource/roboto";
-  import { currentPageNumber } from "../../lib/pageSteps";
+  import { currentPageNumber } from "../../store/pageSteps";
   
   import { onMount } from "svelte";
 
   import ScreenOne from "../../screens/screenOne.svelte";
   import ScreenThree from "../../screens/screenThree.svelte";
-  import ScreenTwo from "../../screens/screenTwo.svelte";
+  import ScreenTwo from "../../screens/screenTwo.svelte"; 
   import StepFour from "../../screens/stepFour.svelte";
   import ScreenFive from "../../screens/screenFive.svelte";
   import ScreenSix from "../../screens/screenSix.svelte";
@@ -38,6 +38,7 @@
 </script>
 
 {#if currentPage === 0}
+<!-- <StepFour /> -->
   <ScreenOne />
 {:else if currentPage === 1}
   <ScreenTwo />

@@ -1,38 +1,58 @@
 <script>
   import "@fontsource/roboto";
-  import { currentPageNumber } from "../lib/pageSteps";
-  
+  import { currentPageNumber } from "../store/pageSteps";
+  import { userID, hitId, WatchedVideos } from "../store/index";
+  import axios from "axios";
   import { FirstScreen } from "../constants/constants";
   import { onMount } from "svelte";
-  import {userID, hitId, Testing} from "../lib/index";
-  
-   let hitID;
+  let hitID;
   let workerId;
 
-  // NextPage
-
+  //----------- NextPage ----------
   const NextPageHandler = () => {
-    currentPageNumber.set(1);
+    currentPageNumber.set(1); 
   };
- // getting url parameters
+  // getting url parameters
   const getParams = () => {
     const params = new URLSearchParams(location.search);
     return params;
   };
 
-onMount(()=>{
- const params = getParams();
+  // retrieving data
+  const fetchingRatingsData = async () => {
+    console.log(`workedID: ${workerId} | hitID: ${hitID}`)
+    try {
+      const params = {
+        hitId: hitID, 
+        participantID: workerId
+      }
+      const response = await axios.get(
+        `https://us-central1-mothsvelte.cloudfunctions.net/fetchData`,
+        {
+         params
+        }
+      );
+     console.log(response.data.collections)
+     WatchedVideos.set(response.data.collections);
+
+    } catch (error) {
+      console.log("SOMETHING WENT WRONG", error);
+    }
+
+  };
+  onMount(() => {
+    const params = getParams();
     hitID = params.get("hitId");
     hitId.set(params.get("hitId"));
-    console.log("HitID:", hitID);
+    // console.log("HitID:", hitID);
 
     workerId = params.get("workerId");
     userID.set(params.get("workerId"));
-    console.log("WORKER ID:", workerId);
-})
+    // console.log("WORKER ID:", workerId);
 
-
-
+    // retreiving data from firebase
+    fetchingRatingsData();
+  });
 </script>
 
 <div class="container w-full h-screen flex justify-center mt-5">
@@ -73,7 +93,8 @@ onMount(()=>{
           {FirstScreen.CONTENT4}
           <a
             href="mailto:cosanlab@gmail.com"
-            class="text-blue-600 hover:text-blue-800 hover:underline">{FirstScreen.EMAIL}</a
+            class="text-blue-600 hover:text-blue-800 hover:underline"
+            >{FirstScreen.EMAIL}</a
           >
         </p>
 

@@ -1,12 +1,12 @@
 <script>
-  import { currentPageNumber } from "../lib/pageSteps";
-  import { userID,hitId } from "../lib/index";
+  import { currentPageNumber } from "../store/pageSteps";
+  import { userID,hitId } from "../store/index";
   import {Screen_Eleven} from "../constants/constants";
   import {db} from "../config/firebase";
-  import { addDoc, collection, doc } from "firebase/firestore";
-  import { loading } from "../lib/index";
+  import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+  import { loading, videoRefrence } from "../store/index";
   
- 
+ let attempt = "attempted1";
   // temporary variables
   let question = {
      storySummary : "",
@@ -22,19 +22,38 @@
   // create or store data into firebase
   const createData = async (emtion, story) => {
     loading.set(true);
-    try {
-    await addDoc(
-        collection(doc(collection(db, $hitId), $userID), "FollowUp-Questions"),
-        {
-          dominantEmotion: emtion,
-          storySummary: story,
-        }
-      );
-     loading.set(false);
-    } catch (error) {
-      console.log(error)
-      loading.set(false);
-    }
+    // -------------- OLD DATABASE STRUCUTURE ---------
+
+    const followUpQuestionsDocRef = doc(
+  db,
+  "study",
+  $hitId,
+  "users",
+  $userID,
+  $videoRefrence,
+  'FollowUp-Questions'
+);
+
+try {
+  await setDoc(followUpQuestionsDocRef, {
+    dominantEmotion: emtion,
+    storySummary: story,
+  });
+  loading.set(false);
+  console.log("Data stored successfully");
+} catch (error) {
+  console.error("Error storing data:", error);
+  loading.set(false);
+}
+
+
+  // -------------- NEW DATABASE FORMAT ------------
+
+
+
+
+
+
   };
 
   // Handle the click event

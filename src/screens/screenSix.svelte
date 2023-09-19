@@ -1,9 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import "@fontsource/roboto";
-  import { currentPageNumber } from "../lib/pageSteps";
+  import { currentPageNumber } from "../store/pageSteps";
   import { verificationData } from "../constants/verificationMedia";
-  import { verifyEmotionName } from "../lib/index";
+  import { verifyEmotionName } from "../store/index";
   let videoUrl = "";
   let selectedObjectName = ""; // New variable to store the object name
   
