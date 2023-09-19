@@ -10,7 +10,7 @@
 
   //----------- NextPage ----------
   const NextPageHandler = () => {
-    currentPageNumber.set(1);
+    currentPageNumber.set(1); 
   };
   // getting url parameters
   const getParams = () => {
@@ -23,7 +23,7 @@
     console.log(`workedID: ${workerId} | hitID: ${hitID}`)
     try {
       const params = {
-        hitId: hitID,
+        hitId: hitID, 
         participantID: workerId
       }
       const response = await axios.get(
@@ -32,7 +32,7 @@
          params
         }
       );
-
+     console.log(response.data.collections)
      WatchedVideos.set(response.data.collections);
 
     } catch (error) {

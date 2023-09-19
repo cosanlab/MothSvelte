@@ -37,21 +37,22 @@
   }
 
   function handleVisibilityChange() {
+    const video = document.querySelector("video");
+
     if (document.hidden) {
-      const video = document.querySelector("video");
       // Pause the video when the page becomes hidden
-      if (video) {
+      if (video && !video.paused) {
         window.alert(
           "To complete this trial, all videos must remain visible and audible."
         );
       }
     } else {
       // Page is visible again, resume video if it was playing before
-      const video = document.querySelector("video");
-      if (video) {
+      if (video && video.paused) {
         video.play();
       }
     }
+
   }
   // Add event listener for visibility change
   document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -82,19 +83,23 @@
       }
 
       // temporary one
-      // if (iteration == 2) {
-      //   currentPageNumber.set(10);
-      // }
+      if (iteration == 2) {
+        currentPageNumber.set(10);
+      }
+
       // loop the videoTimeStamp to find the exact TimeStamp
       for (let i = 0; i < breaks.length; i++) {
         if (
           videoElement.currentTime >= breaks[i] &&
-          videoElement.currentTime >= breaks[i] + 0.3 &&
+          videoElement.currentTime <= breaks[i] + 0.3 &&
           iteration == i
         ) {
           videoTimeStamp.set(videoElement.currentTime);
           EmotionScaleModel.set(true);
           iteration += 1;
+          
+          $videoCurrentTime =  videoElement.currentTime - 5;
+          console.log("this is updated video current time after -5:",$videoCurrentTime)
           break; // Exit the loop after finding the matching timestamp
         }
       }
@@ -121,7 +126,7 @@
       }
     }
 
-    // console.log(breaks);
+    console.log(breaks);
   }
 
   // Function to calculate the minimum space between the new break and existing breaks
@@ -164,6 +169,7 @@
       <!-- svelte-ignore a11y-media-has-caption -->
       <video
         autoplay
+        controls
         class="w-full h-full"
         on:loadedmetadata={handleMetadataLoaded}
         bind:this={videoElement}

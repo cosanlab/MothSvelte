@@ -10,7 +10,6 @@
   
   import Error from "../components/Error.svelte";
   import TrialFinishedError from "../components/TrialFinishedError.svelte";
-  import { db } from "../config/firebase";
 
   //   variables for different actions and purpose
   let error = false;
@@ -49,7 +48,7 @@
     });
   };
   
-// ---------- Filtering videosUrls --------
+// ---------- Filtering videosUrls -------- 
 const  FilteringVideosURLs = () =>{
 // Extract the last part of each URL in arr1
     let arr1LastParts = $VideosURLs.map((url) => url.split("/").pop());
@@ -57,7 +56,7 @@ const  FilteringVideosURLs = () =>{
     let updatedArr = $VideosURLs.filter(
       (item) => !$WatchedVideos.includes(item.split("/").pop())
     );
-    FilteredVideos.set(updatedArr)
+    FilteredVideos.set(updatedArr);
 }
 
   // onMount which is called whenever component is rendered

@@ -7,7 +7,7 @@
 
   import ScreenOne from "../../screens/screenOne.svelte";
   import ScreenThree from "../../screens/screenThree.svelte";
-  import ScreenTwo from "../../screens/screenTwo.svelte";
+  import ScreenTwo from "../../screens/screenTwo.svelte"; 
   import StepFour from "../../screens/stepFour.svelte";
   import ScreenFive from "../../screens/screenFive.svelte";
   import ScreenSix from "../../screens/screenSix.svelte";

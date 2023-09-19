@@ -26,17 +26,20 @@
     videoRefrence.set(videoRef);
 
     // setting timestamps for video
-    if ($videoTimeStamp > 60) {
-      let timeMin = $videoTimeStamp / 60;
-      let temp = timeMin.toFixed(2);
-      let formatted = temp.replace(".", ":");
-      timestamps = formatted.toString();
+    if ($videoTimeStamp > 59) {
+      // Calculate minutes and seconds
+      const minutes = Math.floor($videoTimeStamp / 60);
+      const seconds = Math.floor($videoTimeStamp % 60);
+
+      // Format the time as "mm:ss"
+      const formatted = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+      timestamps = formatted;
+      console.log(`the timestamp is: `, timestamps)
     } else {
-      let temp = $videoTimeStamp.toFixed(0);
-      let conversionToString = temp.toString();
-      // Format timestamps as "0:timestamps"
-      timestamps = "0:" + conversionToString;
-    
+      // If the timestamp is less than a minute, format it as "0:ss"
+     timestamps = `0:${$videoTimeStamp.toFixed(0).toString().padStart(2, '0')}`;
+      console.log(`the timestamp is: ${timestamps}`)
     }
   });
   // onMouseMove function to fill div with mentioned color
@@ -82,8 +85,6 @@
       [emotion]: latestArray[index],
     }));
 
-    // concating
-    const ratingRef = "cloudfront.net/" + videoRef;
     const timestampDocRef = doc(
       db,
       "study",
@@ -92,13 +93,14 @@
       $userID,
       videoRef,
       "ratings",
-      videoRef,
+      "timestamps",
       timestamps
     );
 
     try {
       await setDoc(timestampDocRef, {
         EmotionScale: mergedArray, // Add the merged array data
+        
       });
       console.log("Data stored successfully");
     } catch (error) {
@@ -136,6 +138,7 @@
   window.addEventListener("keydown", spaceKeyPressHandler);
 </script>
 
+<!-- ------------- Svelte + html section ---------->
 <div class="container w-full h-full flex justify-center items-center">
   <div class="wrapper mt-10 flex justify-center flex-col gap-1">
     <div class="instruction mb-3 text-[19px]">

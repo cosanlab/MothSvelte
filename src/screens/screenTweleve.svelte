@@ -15,7 +15,6 @@
     feedback: "",
   };
 
-  let attempt = "attempted1";
   // store form data into firebase
   const storeData = async () => {
     loading.set(true);

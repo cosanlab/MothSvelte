@@ -3,10 +3,8 @@
   import "@fontsource/roboto";
   import { SecondPage } from "./constants/constants";
   import { onMount } from "svelte";
-  import { db } from "./config/firebase";
-  import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 
-  // let queryString = "hitId=hitIdws534d&workerId=PD-slj543dfs&assignmentId=ASSIGNMENT_ID";
+  // let queryString = "hitId=hitIdws5s4d&workerId=PD-slj543dfs&assignmentId=ASSIGNMENT_ID";
   let queryString = "";
   //--------- Open New Window -------
   const openNewWindow = () => {
