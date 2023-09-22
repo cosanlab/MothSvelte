@@ -115,5 +115,5 @@ export const ScreenThirteen = {
 export const ScreenFourteen = {
   TITLE: "Debugging task complete!",
   SUBTITLE:
-    " If this was the real the hit, the data would be saved now and the HIT sunmitted to AMT.",
+    " If this was the real the hit, the data would be saved now and the HIT submitted to AMT.",
 };

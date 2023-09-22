@@ -5,8 +5,8 @@
 
   // Function to be called when pressing "Space" button
   function nextPage() {
-    // currentPageNumber.set(13);
-    goto("/complete");
+    window.close();
+    // goto("/complete");
     RemovingEvent();
   }
 
