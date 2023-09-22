@@ -38,7 +38,6 @@
 </script>
 
 {#if currentPage === 0}
-<!-- <StepFour /> -->
   <ScreenOne />
 {:else if currentPage === 1}
   <ScreenTwo />
