@@ -1,11 +1,13 @@
 <script>
   import "@fontsource/roboto";
   import { currentPageNumber } from "../store/pageSteps";
-  import { VideosURLs, timer} from "../store/index";
+  import { VideosURLs, hitId, userID} from "../store/index";
   import { SecondScreen } from "../constants/constants";
   import { onMount } from "svelte";
   import { shuffleEmotions } from "../constants/emotions";
   import { db } from "../config/firebase";
+  import URlErrorScreen from "../components/URLsParametersError.svelte";
+
   import {
     collection,
     doc,
@@ -14,6 +16,8 @@
     query,
     where,
   } from "firebase/firestore";
+
+let URlError = false;
 
   // removing event
   const RemovingEvent = () => {
@@ -49,6 +53,12 @@
   };
 
   onMount(async () => {
+     // if userID & hitID are not exist then redirecting to error page
+    if(!$userID || !$hitId){
+      URlError = true;
+      console.log("url parameters are not found")
+    }
+
     RetrieveData();
     // Calling the shuffleEmotions function to shuffle the emotions each time
     shuffleEmotions();
@@ -56,6 +66,9 @@
 </script>
 
 <!---------- SVELTE + HTML SECTION ---------->
+{#if URlError}
+ <URlErrorScreen/>
+{:else}
 <div
   class="container w-full h-screen flex justify-center items-center overflow-hidden"
 >
@@ -79,7 +92,7 @@
     <p>{SecondScreen.KEY_PRESS}</p>
   </div>
 </div>
-
+{/if}
 <!-- styling section -->
 <style>
   p {
