@@ -57,7 +57,7 @@ export const SecondScreen = {
 // Third Screen
 export const ThirdScreen = {
     TITLE: "Welcome to the study.",
-    WARNING_MESSAGE: "Just to make sure you're human, in the following screen there will be empty textbox..",
+    WARNING_MESSAGE: "Just to make sure you're human, in the following screen there will be an empty textbox.",
     BOX2_MESSAGE: "Please leave Box2 empty",
     BUTTON: "Continue"
 }
@@ -72,7 +72,7 @@ export const FiveScreen = {
 
 //ScreenEight 8
 export const ScreenEight = {
-  START_NEW_TASK_MSG: " Great! It seems that you're audio and video are working properly. You arenow ready to start the main task!",
+  START_NEW_TASK_MSG: " Great! It seems that you're audio and video are working properly. You are now ready to start the main task!",
   BUTTON: "Continue"
 }
 
@@ -88,7 +88,7 @@ export const Screen_Eleven = {
   THANKS_MESSAGE:
     " Thank you for completing the rating task. We have a few more questions.",
   SUMMARIZE_STORY_LABEL:
-    "Please briefly summarize the story you just heard in a couple of sentence:",
+    "Please briefly summarize the story you just heard in a couple of sentences:",
   DOMINANT_EMOTION_LABEL:
     " What was the dominant emotion you experienced while listening to the story:",
   CONTINUE_BUTTON: "Continue",

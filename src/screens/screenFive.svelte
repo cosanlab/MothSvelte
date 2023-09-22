@@ -1,10 +1,13 @@
 <script>
   import { currentPageNumber } from "../store/pageSteps";
   import { FiveScreen } from "../constants/constants";
+
   //---- function method to triggered next page whenever user click on continue button
   const NextPageHandler = () => {
     currentPageNumber.set(5);
   };
+
+
 </script>
 
 <!-- CONTENT SECTION -->
