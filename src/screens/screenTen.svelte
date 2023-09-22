@@ -170,7 +170,6 @@
       <!-- svelte-ignore a11y-media-has-caption -->
       <video
         autoplay
-        controls
         class="w-full h-full"
         on:loadedmetadata={handleMetadataLoaded}
         bind:this={videoElement}
