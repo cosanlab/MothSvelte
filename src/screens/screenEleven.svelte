@@ -1,11 +1,13 @@
 <script>
-  import { currentPageNumber } from "../store/pageSteps";
+  import { currentPageNumber, EmotionScaleModel,lastRating } from "../store/pageSteps";
   import { userID,hitId } from "../store/index";
   import {Screen_Eleven} from "../constants/constants";
   import {db} from "../config/firebase";
   import { addDoc, collection, doc, setDoc } from "firebase/firestore";
   import { loading, videoRefrence } from "../store/index";
-  
+  import { onMount } from "svelte";
+  import EmotionScaleMapping from "../components/EmotionScaleMapping.svelte";
+
  let attempt = "attempted1";
   // temporary variables
   let question = {
@@ -46,14 +48,6 @@ try {
   loading.set(false);
 }
 
-
-  // -------------- NEW DATABASE FORMAT ------------
-
-
-
-
-
-
   };
 
   // Handle the click event
@@ -70,6 +64,9 @@ try {
 </script>
 
 <!-- CONTENT SECTION -->
+{#if $lastRating}
+  <EmotionScaleMapping />
+{:else}
 <div
   class="container w-full h-screen flex justify-center items-center overflow-hidden"
 >
@@ -131,3 +128,4 @@ try {
     </button>
   </div>
 </div>
+{/if}

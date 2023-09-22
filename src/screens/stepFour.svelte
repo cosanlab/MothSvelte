@@ -57,6 +57,7 @@ const  FilteringVideosURLs = () =>{
       (item) => !$WatchedVideos.includes(item.split("/").pop())
     );
     FilteredVideos.set(updatedArr);
+    console.log("Filtered videos are: ", updatedArr);
 }
 
   // onMount which is called whenever component is rendered

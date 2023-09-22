@@ -1,60 +1,81 @@
 <script>
   import "@fontsource/roboto";
   import { currentPageNumber } from "../store/pageSteps";
-  import { userID, hitId, WatchedVideos } from "../store/index";
+  import { userID, hitId, WatchedVideos, timer } from "../store/index";
   import axios from "axios";
   import { FirstScreen } from "../constants/constants";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
+
+  // define variables
   let hitID;
   let workerId;
+  let pageTimer = 0; // Variable to store elapsed time
+  let timerInterval; // Interval object for the timer
 
   //----------- NextPage ----------
   const NextPageHandler = () => {
-    currentPageNumber.set(1); 
+    currentPageNumber.set(1);
   };
   // getting url parameters
-  const getParams = () => {
+  const getParamValue = (paramName) => {
     const params = new URLSearchParams(location.search);
-    return params;
+    const value = params.get(paramName);
+    return value;
   };
-
   // retrieving data
   const fetchingRatingsData = async () => {
-    console.log(`workedID: ${workerId} | hitID: ${hitID}`)
     try {
       const params = {
-        hitId: hitID, 
-        participantID: workerId
-      }
+        hitId: hitID,
+        participantID: workerId,
+      };
       const response = await axios.get(
         `https://us-central1-mothsvelte.cloudfunctions.net/fetchData`,
         {
-         params
+          params,
         }
       );
-     console.log(response.data.collections)
-     WatchedVideos.set(response.data.collections);
-
+      console.log("user watched videos are: ",response.data.collections);
+      WatchedVideos.set(response.data.collections);
     } catch (error) {
       console.log("SOMETHING WENT WRONG", error);
     }
-
   };
-  onMount(() => {
-    const params = getParams();
-    hitID = params.get("hitId");
-    hitId.set(params.get("hitId"));
-    // console.log("HitID:", hitID);
 
-    workerId = params.get("workerId");
-    userID.set(params.get("workerId"));
-    // console.log("WORKER ID:", workerId);
+  onMount(() => {
+    // ------------------ new method to get params dynamically -----------
+    // Define the parameter names you want to
+    const supportedParamNames = [
+      "hitId",
+      "STUDY_ID",
+      "workerId",
+      "PROLIFIC_PID",
+    ];
+
+    // Get the value for hitId or STUDY_ID
+     hitID = supportedParamNames.includes("hitId")
+      ? getParamValue("hitId") || getParamValue("STUDY_ID")
+      : null;
+
+    // Get the value for workerId or PROLIFIC_PID
+     workerId = supportedParamNames.includes("workerId")
+      ? getParamValue("workerId") || getParamValue("PROLIFIC_PID")
+      : null;
+
+    console.log("HitID:", hitID);
+    console.log("WorkerID:", workerId);
+
+    hitId.set(hitID);
+    userID.set(workerId);
 
     // retreiving data from firebase
     fetchingRatingsData();
+   
   });
+
 </script>
 
+<!-- svelte + html  -->
 <div class="container w-full h-screen flex justify-center mt-5">
   <div
     class="wrapper flex flex-col xl:w-[53%] lg:w-[80%] md:w-[90%] h-auto gap-4"

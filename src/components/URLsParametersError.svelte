@@ -8,22 +8,22 @@ const RemovingEvent = () =>{
  window.removeEventListener('keydown', NextPageHandler);
 }
 
-    const NextPageHandler = () =>{
-      currentPageNumber.set(2);
-      // removing event 
+    const CloseWindow = () =>{
+    //   currentPageNumber.set(4);
+      window.close();
       RemovingEvent();
     }
 
   // Add the on:keydown event handler to the window object
-  window.addEventListener('keydown', NextPageHandler);
+  window.addEventListener('keydown', CloseWindow);
 </script>
 
 <!-- CONTENT SECTION -->
 <div class="container w-full h-screen flex justify-center items-center overflow-hidden">
   <div class="wrapper mx-4 flex flex-col gap-3 justify-center items-center text-xl text-gray-700">
     
-    <p class="flex-wrap text-center">Sorry, that was not the correct answer. Please try again.</p>
-    <p>Press any key to begin.</p>
+    <p class="flex-wrap text-center">Sorry, URL Parameters are not found!</p>
+    <p>Press any key to close window..</p>
     
   </div>
 

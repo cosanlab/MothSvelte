@@ -68,6 +68,7 @@ const files = []; // Initialize an empty array to store heartbeat values
     randomWord = generateRandomWord().toLowerCase();
     randomNumber.set(randomWord);
     }
+
   });
 </script>
 
@@ -82,7 +83,7 @@ const files = []; // Initialize an empty array to store heartbeat values
 
     <p class="flex-wrap text-center">
       Please enter the word <b class="uppercase">{randomWord }</b> in lowercase letters
-      to Box.
+      to the textbox.
     </p>
 
     <!-- <p>{ThirdScreen.BOX2_MESSAGE}</p> -->

@@ -5,6 +5,8 @@
   import { onMount } from "svelte";
 
   // let queryString = "hitId=hitIdws5s4d&workerId=PD-slj543dfs&assignmentId=ASSIGNMENT_ID";
+  // let queryString = "PROLIFIC_PID=65093680f0f29ac89b9a4519&STUDY_ID=UNSAVED-STUDY&SESSION_ID=0f9zflacv52c";
+
   let queryString = "";
   //--------- Open New Window -------
   const openNewWindow = () => {

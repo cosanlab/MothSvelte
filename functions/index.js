@@ -19,6 +19,8 @@ admin.initializeApp();
    cors(req, res, async () => {
      const { hitId, participantID } = req.query;
     
+     console.log("request paramters are: ",req.query)
+
     try {
       // const { docPath } = req.body;
       // const docPath = "/study/HIT_ID/users/TP_1MNC2G79SCJ4/attempted1/ratings";

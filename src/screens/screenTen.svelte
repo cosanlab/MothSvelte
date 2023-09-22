@@ -6,8 +6,9 @@
     videoCurrentTime,
     videoTimeStamp,
     videoURL,
+    lastRating
   } from "../store/pageSteps";
-  import { FilteredVideos, VideosURLs} from "../store/index";
+  import { FilteredVideos, timer, VideosURLs} from "../store/index";
 
   import { onMount, onDestroy } from "svelte";
   import EmotionScaleMapping from "../components/EmotionScaleMapping.svelte";
@@ -79,6 +80,7 @@
       $videoCurrentTime = videoElement.currentTime; // Update the videoCurrentTime store
       // Check if the video has reached its end
       if (videoElement.ended) {
+         lastRating.set(true);
         currentPageNumber.set(10);
       }
 
@@ -96,10 +98,8 @@
         ) {
           videoTimeStamp.set(videoElement.currentTime);
           EmotionScaleModel.set(true);
-          iteration += 1;
-          
+          iteration += 1;          
           $videoCurrentTime =  videoElement.currentTime - 5;
-          console.log("this is updated video current time after -5:",$videoCurrentTime)
           break; // Exit the loop after finding the matching timestamp
         }
       }
@@ -109,7 +109,7 @@
   //--------------- Stim - Paramaters ---------------
   // Function to calculate breaks
   function calculateBreaks() {
-    let numBreaks = Math.floor(stimLength / sampleRate);
+    let numBreaks = Math.ceil(stimLength / sampleRate);
     let availableTimesRange = {
       start: startSpace,
       end: stimLength - endSpace,
@@ -150,6 +150,7 @@
   onMount(() => {
     selectRandomMedia();
     handleMetadataLoaded();
+
   });
 
   onDestroy(() => {
@@ -169,6 +170,7 @@
       <!-- svelte-ignore a11y-media-has-caption -->
       <video
         autoplay
+        controls
         class="w-full h-full"
         on:loadedmetadata={handleMetadataLoaded}
         bind:this={videoElement}

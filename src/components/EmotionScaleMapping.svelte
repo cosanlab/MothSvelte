@@ -5,18 +5,29 @@
     selectedRecords,
     showSelectedPoints,
     videoURL,
+    lastRating,
   } from "../store/pageSteps";
   import { emotions } from "../constants/emotions";
-  import { userID, hitId, videoRefrence } from "../store/index";
+  import { userID, hitId, videoRefrence, screenTimings } from "../store/index";
   import { db } from "../config/firebase";
   import { collection, doc, setDoc } from "firebase/firestore";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   let fillWidths = Array(emotions.length).fill(0);
   let clickedDivs = Array(emotions.length).fill(false);
   let selectedTabs = [];
   let timestamps = "";
   let videoRef = "";
+  let screenTimer; // Initialize screenTimer
+  let timerInterval;
+  let timer = 0;
+
+  // Function to format the timer as "mm:ss"
+  function formatTimer() {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+    screenTimer = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }
 
   onMount(() => {
     // splitting video url for saving in database
@@ -35,13 +46,28 @@
       const formatted = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
       timestamps = formatted;
-      console.log(`the timestamp is: `, timestamps)
+      console.log(`the timestamp is: `, timestamps);
     } else {
       // If the timestamp is less than a minute, format it as "0:ss"
-     timestamps = `0:${$videoTimeStamp.toFixed(0).toString().padStart(2, '0')}`;
-      console.log(`the timestamp is: ${timestamps}`)
+      timestamps = `0:${$videoTimeStamp
+        .toFixed(0)
+        .toString()
+        .padStart(2, "0")}`;
+      console.log(`the timestamp is: ${timestamps}`);
     }
+
+    // Start the timer when the component is mounted
+    timerInterval = setInterval(() => {
+      timer += 1;
+      formatTimer();
+    }, 1000);
   });
+
+  onDestroy(() => {
+    // Stop the timer when the component is about to update
+    clearInterval(timerInterval);
+  });
+
   // onMouseMove function to fill div with mentioned color
   function handleMouseMove(index, event) {
     if (!clickedDivs[index]) {
@@ -76,6 +102,7 @@
   function RemovingEvent() {
     window.removeEventListener("keydown", spaceKeyPressHandler);
   }
+
   // storing data function for to  create or store data in the firebase.
   const StoringData = async () => {
     //  getting last and latest array
@@ -99,8 +126,9 @@
 
     try {
       await setDoc(timestampDocRef, {
-        EmotionScale: mergedArray, // Add the merged array data
-        
+        rating_response_time: screenTimer,
+        EmotionScale: mergedArray
+         // Add the merged array data
       });
       console.log("Data stored successfully");
     } catch (error) {
@@ -122,6 +150,7 @@
     fillWidths = fillWidths.map(() => 0);
     clickedDivs = clickedDivs.map(() => false);
     // calling a method to store data in databse.
+    lastRating.set(false);
     EmotionScaleModel.set(false);
     await StoringData();
     // RemovingEvent();
