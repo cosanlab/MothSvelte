@@ -18,16 +18,8 @@
   let selectedTabs = [];
   let timestamps = "";
   let videoRef = "";
-  let screenTimer; // Initialize screenTimer
-  let timerInterval;
-  let timer = 0;
-
-  // Function to format the timer as "mm:ss"
-  function formatTimer() {
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer % 60;
-    screenTimer = `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  }
+  let screenTimer = 0; // Initialize screenTimer
+  let startTime = 0;
 
   onMount(() => {
     // splitting video url for saving in database
@@ -46,26 +38,16 @@
       const formatted = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
       timestamps = formatted;
-      console.log(`the timestamp is: `, timestamps);
     } else {
       // If the timestamp is less than a minute, format it as "0:ss"
       timestamps = `0:${$videoTimeStamp
         .toFixed(0)
         .toString()
         .padStart(2, "0")}`;
-      console.log(`the timestamp is: ${timestamps}`);
     }
-
-    // Start the timer when the component is mounted
-    timerInterval = setInterval(() => {
-      timer += 1;
-      formatTimer();
-    }, 1000);
-  });
-
-  onDestroy(() => {
-    // Stop the timer when the component is about to update
-    clearInterval(timerInterval);
+  
+  // Record the start time when the component is mounted
+    startTime = Date.now();
   });
 
   // onMouseMove function to fill div with mentioned color
@@ -112,6 +94,9 @@
       [emotion]: latestArray[index],
     }));
 
+  // Stop the timer when the component is about to update
+    screenTimer = Date.now() - startTime;
+    console.log("the screenTimer in milliseconds is : ", screenTimer)
     const timestampDocRef = doc(
       db,
       "study",
@@ -134,6 +119,8 @@
     } catch (error) {
       console.error("Error storing data:", error);
     }
+
+     screenTimer = 0;
   };
 
   // Inside the nextPage() function:

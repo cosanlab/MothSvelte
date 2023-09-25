@@ -10,7 +10,7 @@
   let breaks = [];
  // Function to calculate breaks
   function calculateBreaks() {
-    let numBreaks = Math.floor(stimLength / sampleRate);
+    let numBreaks = Math.ceil(stimLength / sampleRate);
     let availableTimesRange = {
       start: startSpace,
       end: stimLength - endSpace
@@ -22,7 +22,8 @@
 
       // Check if the minimum space between breaks is greater than or equal to spacing
       if (minSpace >= spacing) {
-        breaks.push(randomTime);
+        console.log("this is random time generated: ", randomTime)
+        breaks.push(Math.ceil(randomTime));
         breaks.sort((a, b) => a - b); // Sort the breaks in ascending order
       }
     }

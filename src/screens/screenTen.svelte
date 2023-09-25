@@ -80,6 +80,7 @@
       $videoCurrentTime = videoElement.currentTime; // Update the videoCurrentTime store
       // Check if the video has reached its end
       if (videoElement.ended) {
+         videoTimeStamp.set(videoElement.currentTime);
          lastRating.set(true);
         currentPageNumber.set(10);
       }
@@ -121,7 +122,7 @@
 
       // Check if the minimum space between breaks is greater than or equal to spacing
       if (minSpace >= spacing) {
-        breaks.push(randomTime);
+        breaks.push(Math.ceil(randomTime));
         breaks.sort((a, b) => a - b); // Sort the breaks in ascending order
       }
     }
