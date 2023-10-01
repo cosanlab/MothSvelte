@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { currentPageNumber, randomNumber, trialTimes } from "../store/pageSteps";
-  import {Spacing, EndSpace, StartSpace, SampleRate } from "../store/index";
+  import {Spacing, EndSpace, StartSpace, SampleRate, rewind_video } from "../store/index";
   import { ThirdScreen } from "../constants/constants";
   import { db } from "../config/firebase";
   import { collection, getDocs, query, where } from "firebase/firestore";
@@ -51,6 +51,7 @@ const files = []; // Initialize an empty array to store heartbeat values
 
   // Use onMount to call the generateRandomWord function and assign to global variable when the component is mounted
   onMount(() => {
+    console.log("the re-wind time is: ", $rewind_video)
     // Retrieving stim-parameters method called
     RetrievingStimParamters();
 //------------------------------------------------

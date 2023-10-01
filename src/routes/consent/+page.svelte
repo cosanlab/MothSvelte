@@ -43,7 +43,7 @@
 {:else if currentPage === 2}
   <ScreenThree />
 {:else if currentPage === 3}
-  <StepFour />
+sc  <StepFour />
 {:else if currentPage === 4}
   <ScreenFive />
 {:else if currentPage === 5}
