@@ -6,21 +6,23 @@
     videoCurrentTime,
     videoTimeStamp,
     videoURL,
-    lastRating
+    lastRating,
   } from "../store/pageSteps";
-  import { FilteredVideos, timer, VideosURLs} from "../store/index";
+  import { FilteredVideos, rewind_video, hitId, userID } from "../store/index";
 
   import { onMount, onDestroy } from "svelte";
   import EmotionScaleMapping from "../components/EmotionScaleMapping.svelte";
   import { Spacing, EndSpace, StartSpace, SampleRate } from "../store/index";
+  import { doc, setDoc } from "firebase/firestore";
+  import { db } from "../config/firebase";
 
   let videoUrl = "";
   let videoDuration = 0;
   let videoElement; // Reference to the video element
   let timeUpdateListener;
   let iteration = 0;
+  let videoRef = "";
   // -------------- stim - paramaters ---------------
-
   let sampleRate = $SampleRate;
   let spacing = $Spacing;
   let startSpace = $StartSpace;
@@ -28,6 +30,38 @@
   let stimLength = 0;
   let breaks = [];
 
+  // ----------- saving all breakpoints into firebase store -------
+  const StoringBreakPoints = async (breakpoints) => {
+    
+ const formattedBreakPoints = breakpoints.map((seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+  return `${formattedMinutes}:${formattedSeconds}`;
+ });
+ console.log("formatted breakpoints: ", formattedBreakPoints)
+
+    const timestampDocRef = doc(
+      db,
+      "study",
+      $hitId,
+      "users",
+      $userID,
+      videoRef,
+      "breakpoints"
+    );
+
+    try {
+      await setDoc(timestampDocRef, {
+        breaks: formattedBreakPoints,
+      });
+      console.log("breakpoints stored successfully");
+    } catch (error) {
+      console.error("Error storing breakpoints:", error);
+    }
+  };
+ 
   // Function to select a random object from the array
   function selectRandomMedia() {
     const randomIndex = Math.floor(Math.random() * $FilteredVideos.length);
@@ -35,6 +69,10 @@
     const parts = videoUrl.split(".");
     const extractedPart = parts.slice(1).join(".");
     videoURL.set(extractedPart);
+
+    const videoName = extractedPart.split("/");
+    videoRef = videoName[videoName.length - 1];
+    console.log("videoRef in screenTen is: ", videoRef);
   }
 
   function handleVisibilityChange() {
@@ -53,7 +91,6 @@
         video.play();
       }
     }
-
   }
   // Add event listener for visibility change
   document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -80,8 +117,8 @@
       $videoCurrentTime = videoElement.currentTime; // Update the videoCurrentTime store
       // Check if the video has reached its end
       if (videoElement.ended) {
-         videoTimeStamp.set(videoElement.currentTime);
-         lastRating.set(true);
+        videoTimeStamp.set(videoElement.currentTime);
+        lastRating.set(true);
         currentPageNumber.set(10);
       }
 
@@ -99,8 +136,8 @@
         ) {
           videoTimeStamp.set(videoElement.currentTime);
           EmotionScaleModel.set(true);
-          iteration += 1;          
-          $videoCurrentTime =  videoElement.currentTime - 5;
+          iteration += 1;
+          $videoCurrentTime = videoElement.currentTime - $rewind_video;
           break; // Exit the loop after finding the matching timestamp
         }
       }
@@ -128,6 +165,8 @@
     }
 
     console.log(breaks);
+    // saving all breaks points into firebase store
+    StoringBreakPoints(breaks);
   }
 
   // Function to calculate the minimum space between the new break and existing breaks
@@ -151,7 +190,6 @@
   onMount(() => {
     selectRandomMedia();
     handleMetadataLoaded();
-
   });
 
   onDestroy(() => {

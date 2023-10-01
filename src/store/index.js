@@ -20,22 +20,6 @@ export let StartSpace = writable(0);
 // --------- saving page timer -------
 export let ratingTimer = writable([]);
 export let timer = writable([]);
-
 export let ratingScreenTimings = [];
-
-
-export let screenTimings = (screenTime) => {
-    //  const formattedTime = screenTime.padStart(5, "0"); // Assuming screenTime is a string
-
-    //  ratingScreenTimings.push(formattedTime);
-    //  console.log("screenTimings array is:", ratingScreenTimings);
-    //  return ratingScreenTimings;
-    
-const index = ratingScreenTimings.length + 1;
-const obj = { [`screen${index}`]: screenTime };
-ratingScreenTimings.push(obj);
-console.log("screenTimings array is:", ratingScreenTimings);
-return ratingScreenTimings;
-
-};
-
+// --- re-wind video parameter
+export let rewind_video = writable(0);

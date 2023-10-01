@@ -8,7 +8,7 @@
     lastRating,
   } from "../store/pageSteps";
   import { emotions } from "../constants/emotions";
-  import { userID, hitId, videoRefrence, screenTimings } from "../store/index";
+  import { userID, hitId, videoRefrence } from "../store/index";
   import { db } from "../config/firebase";
   import { collection, doc, setDoc } from "firebase/firestore";
   import { onDestroy, onMount } from "svelte";
