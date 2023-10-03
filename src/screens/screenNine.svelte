@@ -1,7 +1,7 @@
 <script>
   import { currentPageNumber } from "../store/pageSteps";
-  import {ScreenNine} from "../constants/constants";
- 
+  import { ScreenNine } from "../constants/constants";
+
   // removing event
   const RemovingEvent = () => {
     window.removeEventListener("keydown", NextPageHandler);
@@ -15,7 +15,6 @@
 
   // Add the on:keydown event handler to the window object
   window.addEventListener("keydown", NextPageHandler);
-
 
 </script>
 
@@ -37,4 +36,3 @@
     <p>{ScreenNine.PRESS_SPACE}</p>
   </div>
 </div>
-

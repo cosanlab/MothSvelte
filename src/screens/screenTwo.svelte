@@ -34,13 +34,29 @@
   // Add the on:keydown event handler to the window object
   window.addEventListener("keydown", NextPageHandler);
 
+  // //////////// Retrieving EmotionList /////////////
+  const RetrievingEmotionsList = async () => {
+    const AssetRef = collection(db, "systemAssets");
+    const queryRef = query(AssetRef, where("__name__", "==", "emotionsList"));
+    let querySnapshot = await getDocs(queryRef);
+    const files = []; // Initialize an empty array to store heartbeat values
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const id = doc.id;
+      const file = { id, ...data };
+      files.push(file);
+    });
+    // Calling the shuffleEmotions function to shuffle the emotions each time
+    shuffleEmotions(files[0].emotions);
+  };
+
   // getting data from firebase
   const RetrieveData = async () => {
-    const videoRef = collection(db, "systemAssets");
+    const AssetRef = collection(db, "systemAssets");
 
-    // Query documents where the "name" field is equal to "re-wind movie"
+    //////// Below code is used to fetch re-wind movie
     const rewindQuery = query(
-      videoRef,
+      AssetRef,
       where("__name__", "==", "re-wind movie")
     );
     try {
@@ -50,7 +66,6 @@
         const rewindDocument = querySnapshot.docs[0];
         const rewindData = rewindDocument.data();
         rewind_video.set(rewindData.rewind);
-        console.log("The re-wind parameter is:", rewindData.rewind);
       } else {
         console.log("No documents found that match the query.");
       }
@@ -58,8 +73,8 @@
       console.error("Error fetching data:", error);
     }
 
-    // --- below code is for retreiving video urls ----
-    const queryRef = query(videoRef, where("__name__", "==", "videos-URLs"));
+    // /////// Below code is for retreiving video urls //////////////////
+    const queryRef = query(AssetRef, where("__name__", "==", "videos-URLs"));
     let querySnapshot = await getDocs(queryRef);
     const files = []; // Initialize an empty array to store heartbeat values
     querySnapshot.forEach((doc) => {
@@ -78,10 +93,10 @@
       URlError = true;
       console.log("url parameters are not found");
     }
-
+    // -------------- retrieving emotions list -------
+    RetrievingEmotionsList();
     RetrieveData();
-    // Calling the shuffleEmotions function to shuffle the emotions each time
-    shuffleEmotions();
+    
   });
 </script>
 

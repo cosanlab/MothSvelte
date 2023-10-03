@@ -9,7 +9,7 @@
     lastRating,
   } from "../store/pageSteps";
   import { FilteredVideos, rewind_video, hitId, userID } from "../store/index";
-
+  import { emotions } from "../constants/emotions";
   import { onMount, onDestroy } from "svelte";
   import EmotionScaleMapping from "../components/EmotionScaleMapping.svelte";
   import { Spacing, EndSpace, StartSpace, SampleRate } from "../store/index";
@@ -22,6 +22,7 @@
   let timeUpdateListener;
   let iteration = 0;
   let videoRef = "";
+  let dummyBreak = "00:00";
   // -------------- stim - paramaters ---------------
   let sampleRate = $SampleRate;
   let spacing = $Spacing;
@@ -32,15 +33,14 @@
 
   // ----------- saving all breakpoints into firebase store -------
   const StoringBreakPoints = async (breakpoints) => {
-    
- const formattedBreakPoints = breakpoints.map((seconds) => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
-  return `${formattedMinutes}:${formattedSeconds}`;
- });
- console.log("formatted breakpoints: ", formattedBreakPoints)
+    const formattedBreakPoints = breakpoints.map((seconds) => {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      const formattedSeconds =
+        remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+      return `${formattedMinutes}:${formattedSeconds}`;
+    });
 
     const timestampDocRef = doc(
       db,
@@ -61,7 +61,7 @@
       console.error("Error storing breakpoints:", error);
     }
   };
- 
+
   // Function to select a random object from the array
   function selectRandomMedia() {
     const randomIndex = Math.floor(Math.random() * $FilteredVideos.length);
@@ -72,7 +72,6 @@
 
     const videoName = extractedPart.split("/");
     videoRef = videoName[videoName.length - 1];
-    console.log("videoRef in screenTen is: ", videoRef);
   }
 
   function handleVisibilityChange() {
@@ -104,7 +103,6 @@
       if (stimLength > 0) {
         calculateBreaks();
       }
-      console.log(stimLength);
       videoElement.currentTime = $videoCurrentTime; // Set the initial video time
       timeUpdateListener = updateTime;
       videoElement.addEventListener("timeupdate", timeUpdateListener); // Add event listener for time updates
@@ -164,7 +162,7 @@
       }
     }
 
-    console.log(breaks);
+    // console.log(breaks);
     // saving all breaks points into firebase store
     StoringBreakPoints(breaks);
   }
@@ -186,10 +184,38 @@
     return range.start + Math.random() * (range.end - range.start);
   }
 
+  // -------------- Dummy Data storing function definition -----------
+  const DummyDataStoring = async () => {
+    const DummyEmotions = emotions.map((emotion) => ({ [emotion]: 0 }));
+    const DummyDocRef = doc(
+      db,
+      "study",
+      $hitId,
+      "users",
+      $userID,
+      videoRef,
+      "ratings",
+      "timestamps",
+      dummyBreak
+    );
+
+    try {
+      await setDoc(DummyDocRef, {
+        rating_response_time: 0,
+        EmotionScale: DummyEmotions,
+        // Add the merged array data
+      });
+      console.log("Dummy Data stored successfully");
+    } catch (error) {
+      console.error("Error occur while storing dummy data:", error);
+    }
+  };
   //------------- onMount ----------------
   onMount(() => {
     selectRandomMedia();
     handleMetadataLoaded();
+    // storing dummy data as soon as component mounted
+    DummyDataStoring();
   });
 
   onDestroy(() => {

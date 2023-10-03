@@ -10,8 +10,8 @@
   import { emotions } from "../constants/emotions";
   import { userID, hitId, videoRefrence } from "../store/index";
   import { db } from "../config/firebase";
-  import { collection, doc, setDoc } from "firebase/firestore";
-  import { onDestroy, onMount } from "svelte";
+  import {  doc, setDoc } from "firebase/firestore";
+  import {  onMount } from "svelte";
 
   let fillWidths = Array(emotions.length).fill(0);
   let clickedDivs = Array(emotions.length).fill(false);
@@ -96,7 +96,6 @@
 
   // Stop the timer when the component is about to update
     screenTimer = Date.now() - startTime;
-    console.log("the screenTimer in milliseconds is : ", screenTimer)
     const timestampDocRef = doc(
       db,
       "study",

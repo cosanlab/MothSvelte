@@ -4,10 +4,10 @@
   import { SecondPage } from "./constants/constants";
   import { onMount } from "svelte";
 
-  // let queryString = "hitId=hitIdws5s4d&workerId=PD-slj543dfs&assignmentId=ASSIGNMENT_ID";
+  let queryString = "hitId=hitIdws5s4d&workerId=PD-slj543dfs&assignmentId=ASSIGNMENT_ID";
   // let queryString = "PROLIFIC_PID=65093680f0f29ac89b9a4519&STUDY_ID=UNSAVED-STUDY&SESSION_ID=0f9zflacv52c";
 
-  let queryString = "";
+  // let queryString = "";
   //--------- Open New Window -------
   const openNewWindow = () => {
     const customWidth = 1100; // Set your desired custom width here
@@ -18,15 +18,13 @@
     window.open(`/consent?${queryString}`, "popupWindow", windowFeatures);
   };
 
- 
-
   onMount( async() => {
-    queryString = window.location.search.slice(1);
-    if (queryString == "") {
-      console.log("There are no URL Parameters");
-    } else {
-      console.log(queryString);
-    }
+    // queryString = window.location.search.slice(1);
+    // if (queryString == "") {
+    //   console.log("There are no URL Parameters");
+    // } else {
+    //   console.log(queryString);
+    // }
 
   });
 </script>
