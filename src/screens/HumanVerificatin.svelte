@@ -11,7 +11,8 @@
   // Create an array to store selected emotions
   let selectedEmotions = [];
   let showErrorPage = false;
-  // Function to handle mouse move for a specific div
+
+  // Function to handle mouse movement for a specific div
   function handleMouseMove(index, event) {
     if (!clickedDivs[index]) {
       const mouseX =
@@ -49,8 +50,6 @@
 
   // Function to be called when pressing "Space" button
   function nextPage() {
-    // Verify selected emotions using verifyEmotionName function
-    // const isCorrect = verifyEmotionName(selectedEmotions);
     const isCorrect = selectedEmotions.includes($verifyEmotionName)
     console.log(isCorrect);
    

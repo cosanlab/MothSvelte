@@ -8,15 +8,7 @@
   import { db } from "../config/firebase";
   import URlErrorScreen from "../components/URLsParametersError.svelte";
 
-  import {
-    collection,
-    doc,
-    setDoc,
-    getDocs,
-    query,
-    where,
-    getDoc,
-  } from "firebase/firestore";
+  import { collection, getDocs, query, where } from "firebase/firestore";
 
   let URlError = false;
 
@@ -96,7 +88,6 @@
     // -------------- retrieving emotions list -------
     RetrievingEmotionsList();
     RetrieveData();
-    
   });
 </script>
 

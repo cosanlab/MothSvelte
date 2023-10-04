@@ -6,7 +6,7 @@
     trialTimes,
   } from "../store/pageSteps";
   import { onMount } from "svelte";
-  import { userID, hitId, VideosURLs, WatchedVideos, FilteredVideos } from "../store/index";
+  import { VideosURLs, WatchedVideos, FilteredVideos } from "../store/index";
   
   import Error from "../components/Error.svelte";
   import TrialFinishedError from "../components/TrialFinishedError.svelte";
@@ -17,7 +17,6 @@
   let inputValue2 = "";
   let randomValue = "";
   let trial_Times = 0;
-  let attempt = "attempted1";
   // checking user input that whether it is same with previous displayed value or not
   const checkingUserInput = () => {
     // getting previous display value from store
@@ -57,7 +56,6 @@ const  FilteringVideosURLs = () =>{
       (item) => !$WatchedVideos.includes(item.split("/").pop())
     );
     FilteredVideos.set(updatedArr);
-    console.log("Filtered videos are: ", updatedArr);
 }
 
   // onMount which is called whenever component is rendered

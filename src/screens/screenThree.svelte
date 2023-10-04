@@ -86,9 +86,6 @@ const files = []; // Initialize an empty array to store heartbeat values
       Please enter the word <b class="uppercase">{randomWord }</b> in lowercase letters
       to the textbox.
     </p>
-
-    <!-- <p>{ThirdScreen.BOX2_MESSAGE}</p> -->
-
     <button
       on:click={NextPageHandler}
       class="py-1 border border-gray-400 text-sm rounded-md px-3 hover:bg-gray-200"

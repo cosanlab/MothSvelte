@@ -42,7 +42,7 @@
       return `${formattedMinutes}:${formattedSeconds}`;
     });
 
-    const timestampDocRef = doc(
+    const breakPointsDocRef = doc(
       db,
       "study",
       $hitId,
@@ -53,12 +53,12 @@
     );
 
     try {
-      await setDoc(timestampDocRef, {
+      await setDoc(breakPointsDocRef, {
         breaks: formattedBreakPoints,
       });
       console.log("breakpoints stored successfully");
     } catch (error) {
-      console.error("Error storing breakpoints:", error);
+      console.error("Error occured while storing breakpoints:", error);
     }
   };
 
@@ -120,7 +120,7 @@
         currentPageNumber.set(10);
       }
 
-      // temporary one
+      // below two line for demo purpose
       // if (iteration == 2) {
       //   currentPageNumber.set(10);
       // }
@@ -136,7 +136,7 @@
           EmotionScaleModel.set(true);
           iteration += 1;
           $videoCurrentTime = videoElement.currentTime - $rewind_video;
-          break; // Exit the loop after finding the matching timestamp
+          break; // Exit the loop after finding the matching media break point with running media time
         }
       }
     }
@@ -161,8 +161,6 @@
         breaks.sort((a, b) => a - b); // Sort the breaks in ascending order
       }
     }
-
-    // console.log(breaks);
     // saving all breaks points into firebase store
     StoringBreakPoints(breaks);
   }
@@ -207,7 +205,7 @@
       });
       console.log("Dummy Data stored successfully");
     } catch (error) {
-      console.error("Error occur while storing dummy data:", error);
+      console.error("Error occured while storing dummy data:", error);
     }
   };
   //------------- onMount ----------------

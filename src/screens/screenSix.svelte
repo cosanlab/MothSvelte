@@ -6,7 +6,6 @@
   import { verifyEmotionName } from "../store/index";
   let videoUrl = "";
   let selectedObjectName = ""; // New variable to store the object name
-  
 
   // Function to select a random object from the array
   function selectRandomMedia() {
@@ -21,26 +20,10 @@
     currentPageNumber.set(6);
   }
 
-  // Function to handle the visibility change event
-  function handleVisibilityChange() {
-    if (document.hidden) {
-      const video = document.querySelector("video");
-      if (video) {
-        video.pause();
-         window.alert(
-          "To complete this trial, all videos must remain visible and audible."
-        );
-      }
-    }
-  }
-
   // Function to handle video playback ended event
   function handleVideoEnded() {
     verificationPage();
   }
-
-  // Add event listener for visibility change
-  // document.addEventListener("visibilitychange", handleVisibilityChange);
 
   // Call the selectRandomMedia function when the component mounts
   onMount(() => {

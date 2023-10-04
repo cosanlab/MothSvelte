@@ -1,10 +1,9 @@
 import { writable } from "svelte/store";
 export let loading = writable(false);
-export let userID = writable("");
-export let hitId = writable("");
+export let userID = writable(""); // storing userID in svelte-store when fetched dynamically from URL
+export let hitId = writable("");  // storing hitId in svelte-store when fetched dynamically from URL
 export let Testing = writable(false);
-// humanverification emotion name
-export let verifyEmotionName = writable("");
+export let verifyEmotionName = writable(""); // storing randomize emotion name for human verification
 // ---- Videos filtering --------
 export let VideosURLs = writable([]);
 export let WatchedVideos = writable([]);

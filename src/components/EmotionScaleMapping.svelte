@@ -10,8 +10,8 @@
   import { emotions } from "../constants/emotions";
   import { userID, hitId, videoRefrence } from "../store/index";
   import { db } from "../config/firebase";
-  import {  doc, setDoc } from "firebase/firestore";
-  import {  onMount } from "svelte";
+  import { doc, setDoc } from "firebase/firestore";
+  import { onMount } from "svelte";
 
   let fillWidths = Array(emotions.length).fill(0);
   let clickedDivs = Array(emotions.length).fill(false);
@@ -35,7 +35,9 @@
       const seconds = Math.floor($videoTimeStamp % 60);
 
       // Format the time as "mm:ss"
-      const formatted = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+      const formatted = `${formattedMinutes}:${formattedSeconds}`;
 
       timestamps = formatted;
     } else {
@@ -45,8 +47,8 @@
         .toString()
         .padStart(2, "0")}`;
     }
-  
-  // Record the start time when the component is mounted
+
+    // Record the start time when the component is mounted
     startTime = Date.now();
   });
 
@@ -94,7 +96,7 @@
       [emotion]: latestArray[index],
     }));
 
-  // Stop the timer when the component is about to update
+    // Stop the timer when the component is about to update
     screenTimer = Date.now() - startTime;
     const timestampDocRef = doc(
       db,
@@ -111,15 +113,15 @@
     try {
       await setDoc(timestampDocRef, {
         rating_response_time: screenTimer,
-        EmotionScale: mergedArray
-         // Add the merged array data
+        EmotionScale: mergedArray,
+        // Add the merged array data
       });
       console.log("Data stored successfully");
     } catch (error) {
       console.error("Error storing data:", error);
     }
 
-     screenTimer = 0;
+    screenTimer = 0;
   };
 
   // Inside the nextPage() function:

@@ -1,12 +1,9 @@
 <script>
-  import { currentPageNumber } from "../store/pageSteps";
   import {ScreenThirteen} from "../constants/constants";
-  import {goto} from "$app/navigation";
 
   // Function to be called when pressing "Space" button
   function nextPage() {
     window.close();
-    // goto("/complete");
     RemovingEvent();
   }
 

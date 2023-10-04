@@ -18,18 +18,11 @@ admin.initializeApp();
  exports.fetchData = functions.https.onRequest(async (req, res) => {
    cors(req, res, async () => {
      const { hitId, participantID } = req.query;
-    
-     console.log("request paramters are: ",req.query)
 
     try {
-      // const { docPath } = req.body;
-      // const docPath = "/study/HIT_ID/users/TP_1MNC2G79SCJ4/attempted1/ratings";
       const docPath = `/study/${hitId}/users/${participantID}`;
-
       const collections = await admin.firestore().doc(docPath).listCollections();
       const collectionIds = collections.map((col) => col.id);
-
-      // return { collections: collectionIds };
 
       return res.status(200).json({ success: true, collections: collectionIds });
     } catch (error) {
@@ -43,7 +36,6 @@ admin.initializeApp();
      
 });
 
-// ------------ Fetching UserAttempt ----------------
 
 
 
