@@ -2,12 +2,11 @@
     import "@fontsource/roboto";
 import { currentPageNumber } from "../store/pageSteps";
 
-
-// removing event 
+// removing event when component unmounted
 const RemovingEvent = () =>{
  window.removeEventListener('keydown', NextPageHandler);
 }
-
+// ------ navigate to the the previous screen --------
     const NextPageHandler = () =>{
       currentPageNumber.set(4);
       // removing event 
@@ -21,12 +20,9 @@ const RemovingEvent = () =>{
 <!-- CONTENT SECTION -->
 <div class="container w-full h-screen flex justify-center items-center overflow-hidden">
   <div class="wrapper mx-4 flex flex-col gap-3 justify-center items-center text-xl text-gray-700">
-    
     <p class="flex-wrap text-center">Sorry, that was not the correct answer. Please try again!.</p>
     <p>Press any key to continue..</p>
-    
   </div>
-
 </div>
 
 <!-- styling section -->

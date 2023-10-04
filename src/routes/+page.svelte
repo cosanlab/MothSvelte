@@ -1,7 +1,5 @@
 <script>
     import App from "../app.svelte";
-    import StimBreak from "../components/stim_break.svelte";
 </script>
-
+<!-- initially website wil render/start from the APP file -->
 <App/>
-<!-- <StimBreak/> -->

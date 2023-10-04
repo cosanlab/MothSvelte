@@ -18,7 +18,6 @@
   import ScreenTweleve from "../../screens/screenTweleve.svelte";
   import ScreenThirteen from "../../screens/screenThirteen.svelte";
   import ScreenFourteen from "../../screens/screenFourteen.svelte";
- import StimBreak from "../../components/stim_break.svelte";
   let currentPage;
   
   // function definition to change the document title

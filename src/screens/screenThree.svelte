@@ -3,6 +3,7 @@
   import { currentPageNumber, randomNumber, trialTimes } from "../store/pageSteps";
   import {Spacing, EndSpace, StartSpace, SampleRate, rewind_video } from "../store/index";
   import { ThirdScreen } from "../constants/constants";
+  
   import { db } from "../config/firebase";
   import { collection, getDocs, query, where } from "firebase/firestore";
 
@@ -51,7 +52,6 @@ const files = []; // Initialize an empty array to store heartbeat values
 
   // Use onMount to call the generateRandomWord function and assign to global variable when the component is mounted
   onMount(() => {
-    console.log("the re-wind time is: ", $rewind_video)
     // Retrieving stim-parameters method called
     RetrievingStimParamters();
 //------------------------------------------------
@@ -86,9 +86,6 @@ const files = []; // Initialize an empty array to store heartbeat values
       Please enter the word <b class="uppercase">{randomWord }</b> in lowercase letters
       to the textbox.
     </p>
-
-    <!-- <p>{ThirdScreen.BOX2_MESSAGE}</p> -->
-
     <button
       on:click={NextPageHandler}
       class="py-1 border border-gray-400 text-sm rounded-md px-3 hover:bg-gray-200"

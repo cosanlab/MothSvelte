@@ -4,13 +4,12 @@
   import { userID, hitId, WatchedVideos, timer } from "../store/index";
   import axios from "axios";
   import { FirstScreen } from "../constants/constants";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
 
   // define variables
   let hitID;
   let workerId;
-  let pageTimer = 0; // Variable to store elapsed time
-  let timerInterval; // Interval object for the timer
+  
 
   //----------- NextPage ----------
   const NextPageHandler = () => {

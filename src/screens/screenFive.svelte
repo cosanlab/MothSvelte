@@ -6,8 +6,6 @@
   const NextPageHandler = () => {
     currentPageNumber.set(5);
   };
-
-
 </script>
 
 <!-- CONTENT SECTION -->
