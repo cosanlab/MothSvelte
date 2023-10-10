@@ -1,15 +1,10 @@
 
-export const HomeScreen = {
-    TITLE: "Welcome to psiTurk!",
-    MESSAGE: "Begin by viewing the",
-    ANCHAR_TAG: "ad"
-}
-// Second screen
+// Welcome screen
 
-export const SecondPage = {
-  TITLE: " Thank you for accepting this HIT!",
+export const WelcomePage = {
+  TITLE: " Thank you for accepting this study!",
   SUBTITLE:
-    " By clicking the following URL link, you will be taken to the experiment,including complete instructions and an informed consent agreement.",
+    " By clicking the following URL link, you will be taken to the experiment, including complete instructions and an informed consent form.",
   WARNING_MESSAGE: "Warning:",
   INSTRUCTIONS:
     "Please disable pop-up blockers before continuing.",
@@ -17,7 +12,7 @@ export const SecondPage = {
 };
 
 // POPUP WINDOW CONSTANTS
-export const FirstScreen = {
+export const ConsentScreen = {
   TITLE: "We need your consent to proceed",
   SUBTITLE:
     " If you reload or close/reopen this page, you will be asked to provide consent again. But the task will resume where you left off; you will not have to repeat work you have already completed.",
@@ -37,7 +32,7 @@ export const FirstScreen = {
   PRINT_BUTTON: "Print a copy of this",
     QUESTION: "Do you understand and consent to these terms?",
   AGREE_BUTTON: "I agree",
-    DISAPPROVE_BUTTON: "🚫 No thanks, I do not want to do this HIT",
+    DISAPPROVE_BUTTON: "🚫 No thanks, I do not want to participate",
 };
 
 // Second Screen

@@ -1,7 +1,8 @@
 <script>
   import logo from "./assets/logo.png";
   import "@fontsource/roboto";
-  import { SecondPage } from "./constants/constants";
+  import { WelcomePage } from "./constants/constants";
+  import { generateRandomQueryString } from './constants/utils.js';
   import { onMount } from "svelte";
 
   // below are the static/dummy parameters which can used for the demo purpose
@@ -16,13 +17,15 @@
       window.innerHeight + 80
     },left=0,top=0`;
 
-    window.open(`/consent?${queryString}`, "popupWindow", windowFeatures);
+    window.open(`/experiment?${queryString}`, "popupWindow", windowFeatures);
   };
+
 
   onMount(async () => {
     queryString = window.location.search.slice(1);
     if (queryString == "") {
-      console.log("There are no URL Parameters");
+      queryString = generateRandomQueryString();
+      console.log("There are no URL Parameters, generating random");
     } else {
       console.log(queryString);
     }
@@ -43,11 +46,11 @@
 
     <div class="right w-[80%] h-auto flex flex-col gap-2">
       <h1 class="text-4xl">
-        {SecondPage.TITLE}
+        {WelcomePage.TITLE}
       </h1>
 
       <p class="text-lg">
-        {SecondPage.SUBTITLE}
+        {WelcomePage.SUBTITLE}
       </p>
 
       <div class="container mx-auto">
@@ -61,8 +64,8 @@
             >
               <!-- svelte-ignore a11y-missing-attribute -->
               <p class="text-[#8a6d3b] text-lg">
-                <b>{SecondPage.WARNING_MESSAGE}</b>
-                {SecondPage.INSTRUCTIONS}
+                <b>{WelcomePage.WARNING_MESSAGE}</b>
+                {WelcomePage.INSTRUCTIONS}
               </p>
             </div>
           </div>
@@ -74,7 +77,7 @@
         class="bg-blue-700 opacity-75 text-white w-40 p-2 px-2 text-lg border-2 border-blue-700 rounded-md hover:bg-blue-800 active:border-2 focus:border-2 focus:border-black active:border-black"
         on:click={openNewWindow}
       >
-        {SecondPage.BUTTON}
+        {WelcomePage.BUTTON}
       </button>
     </div>
   </div>

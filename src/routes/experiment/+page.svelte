@@ -1,10 +1,20 @@
-<!-- SCREEN ONE AFTER POP UP -->
+<!-- This is the main experiment script which runs in the pop-up window-->
 <script>
   import "@fontsource/roboto";
+  // This is the task progress handler
   import { currentPageNumber } from "../../store/pageSteps";
-  import { onMount } from "svelte";
+  import { parseURLParameters, getSessionData, chooseStimuli, stimURL } from "../../constants/utils";
 
-  import ScreenOne from "../../screens/screenOne.svelte";
+
+  // parameters fot the session that are stored in the store so different components can read them
+  import { userID, hitId, WatchedVideos, rewind_video, VideosURLs } from "../../store/index";
+  // database related functions
+  import { db } from "../../config/firebase";
+  import axios from "axios";
+
+  import { onMount } from "svelte";
+  // Components/screens for diffrent stages of the App
+  import Consent from "../../screens/Consent.svelte";
   import ScreenThree from "../../screens/screenThree.svelte";
   import ScreenTwo from "../../screens/screenTwo.svelte"; 
   import StepFour from "../../screens/stepFour.svelte";
@@ -19,15 +29,42 @@
   import ScreenThirteen from "../../screens/screenThirteen.svelte";
   import ScreenFourteen from "../../screens/screenFourteen.svelte";
   let currentPage;
-  
+
+  let userId;
+  let taskId;
+  let sessionId;
+  let platform;
+  let sessionData;
+  let curStim;
+
   // function definition to change the document title
   const ChangeTitle = () => {
-    document.title = "Psychology Experiment - Informed Consent Form";
+    document.title = "Psychology Experiment";
   };
 
+  onMount(async () => {
 
-  onMount(() => {
-   
+    ({ userId, taskId, sessionId, platform } = parseURLParameters());
+    console.log("User ID:", userId);
+    console.log("Task ID:", taskId);
+    console.log("Session ID:", sessionId);
+    console.log("Platform:", platform);
+
+    sessionData = await getSessionData(sessionId);
+
+    if (sessionData === null) {
+      console.log("new session");
+      curStim = await chooseStimuli(userId)
+      console.log('Stim for new session:', curStim);
+    } else if (sessionData.status === "complete") {
+      console.log("session complete, route to completion page");
+    } else {
+      console.log("Session Status:", sessionData.status);
+      console.log("Session Stim:", sessionData.stimuli);
+    }
+    const curStimURL = await stimURL(curStim);
+    console.log(curStimURL);
+
     currentPageNumber.subscribe((value) => {
       currentPage = value;
       ChangeTitle();
@@ -36,7 +73,7 @@
 </script>
 
 {#if currentPage === 0}
-  <ScreenOne />
+  <Consent />
 {:else if currentPage === 1}
   <ScreenTwo />
 {:else if currentPage === 2}

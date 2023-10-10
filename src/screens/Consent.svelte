@@ -1,76 +1,13 @@
 <script>
   import "@fontsource/roboto";
   import { currentPageNumber } from "../store/pageSteps";
-  import { userID, hitId, WatchedVideos, timer } from "../store/index";
-  import axios from "axios";
-  import { FirstScreen } from "../constants/constants";
-  import { onMount } from "svelte";
-
-  // define variables
-  let hitID;
-  let workerId;
+  import { ConsentScreen } from "../constants/constants";
   
 
   //----------- NextPage ----------
   const NextPageHandler = () => {
     currentPageNumber.set(1);
   };
-  // getting url parameters
-  const getParamValue = (paramName) => {
-    const params = new URLSearchParams(location.search);
-    const value = params.get(paramName);
-    return value;
-  };
-  // retrieving data
-  const fetchingRatingsData = async () => {
-    try {
-      const params = {
-        hitId: hitID,
-        participantID: workerId,
-      };
-      const response = await axios.get(
-        `https://us-central1-mothsvelte.cloudfunctions.net/fetchData`,
-        {
-          params,
-        }
-      );
-      console.log("user watched videos are: ",response.data.collections);
-      WatchedVideos.set(response.data.collections);
-    } catch (error) {
-      console.log("SOMETHING WENT WRONG", error);
-    }
-  };
-
-  onMount(() => {
-    // ------------------ new method to get params dynamically -----------
-    // Define the parameter names you want to
-    const supportedParamNames = [
-      "hitId",
-      "STUDY_ID",
-      "workerId",
-      "PROLIFIC_PID",
-    ];
-
-    // Get the value for hitId or STUDY_ID
-     hitID = supportedParamNames.includes("hitId")
-      ? getParamValue("hitId") || getParamValue("STUDY_ID")
-      : null;
-
-    // Get the value for workerId or PROLIFIC_PID
-     workerId = supportedParamNames.includes("workerId")
-      ? getParamValue("workerId") || getParamValue("PROLIFIC_PID")
-      : null;
-
-    console.log("HitID:", hitID);
-    console.log("WorkerID:", workerId);
-
-    hitId.set(hitID);
-    userID.set(workerId);
-
-    // retreiving data from firebase
-    fetchingRatingsData();
-   
-  });
 
 </script>
 
@@ -80,10 +17,10 @@
     class="wrapper flex flex-col xl:w-[53%] lg:w-[80%] md:w-[90%] h-auto gap-4"
   >
     <!-- heading -->
-    <h1 class="text-4xl">{FirstScreen.TITLE}</h1>
+    <h1 class="text-4xl">{ConsentScreen.TITLE}</h1>
     <!-- text content -->
     <p class="text-lg -mt-2">
-      {FirstScreen.SUBTITLE}
+      {ConsentScreen.SUBTITLE}
     </p>
     <!-- break line -->
     <hr />
@@ -93,33 +30,33 @@
       class="p-5 bg-gray-100 w-full flex flex-col border-2 border-gray-300 rounded-md"
     >
       <strong class="italic text-sm mb-2"
-        >{FirstScreen.INSTRUCTION_MESSAGE}</strong
+        >{ConsentScreen.INSTRUCTION_MESSAGE}</strong
       >
       <!-- content -->
       <div class="content">
         <p class="italic text-sm mb-2 text-black">
-          {FirstScreen.CONTENT1}
+          {ConsentScreen.CONTENT1}
         </p>
 
         <p class="text-sm mb-2">
-          {FirstScreen.CONTENT2}
+          {ConsentScreen.CONTENT2}
         </p>
 
         <p class="text-sm mb-2">
-          {FirstScreen.CONTENT3}
+          {ConsentScreen.CONTENT3}
         </p>
 
         <p class="text-sm mb-2">
-          {FirstScreen.CONTENT4}
+          {ConsentScreen.CONTENT4}
           <a
             href="mailto:cosanlab@gmail.com"
             class="text-blue-600 hover:text-blue-800 hover:underline"
-            >{FirstScreen.EMAIL}</a
+            >{ConsentScreen.EMAIL}</a
           >
         </p>
 
         <p class="text-sm mb-2">
-          {FirstScreen.CONTENT5}
+          {ConsentScreen.CONTENT5}
         </p>
       </div>
       <!-- print as a copy in pdf -->
@@ -142,7 +79,7 @@
             d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"
           />
         </svg>
-        {FirstScreen.PRINT_BUTTON}</button
+        {ConsentScreen.PRINT_BUTTON}</button
       >
     </section>
 
@@ -150,7 +87,7 @@
 
     <!-- last section -->
     <div class="last flex flex-col gap-3">
-      <p class="text-xl">{FirstScreen.QUESTION}</p>
+      <p class="text-xl">{ConsentScreen.QUESTION}</p>
       <!-- buttons -->
       <div class="buttons flex justify-around mx-8 mt-3 mb-2 text-[20px]">
         <button
@@ -169,13 +106,13 @@
               d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
             />
           </svg>
-          {FirstScreen.AGREE_BUTTON}</button
+          {ConsentScreen.AGREE_BUTTON}</button
         >
         <!-- second button -->
         <button
           class="p-1 px-2 bg-red-600 flex justify-center items-center text-white border-2 border-red-600 opacity-80 hover:opacity-100 rounded-md active:border-2 focus:border-2 focus:border-black active:border-black"
           on:click={() => window.close()}
-          >{FirstScreen.DISAPPROVE_BUTTON}</button
+          >{ConsentScreen.DISAPPROVE_BUTTON}</button
         >
       </div>
     </div>
