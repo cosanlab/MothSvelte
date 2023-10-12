@@ -35,6 +35,14 @@ export function parseURLParameters() {
   }
 }
 
+// Function to get all video parameters
+export async function getVideoParams() {
+  const experimentParametersDoc = doc(db, 'experimentParameters', 'videoParameters');
+  const experimentParametersSnapshot = await getDoc(experimentParametersDoc);
+
+  return experimentParametersSnapshot.data()
+}
+
 // Function to get session data if exists
 export async function getSessionData(sessionId) {
   try {
@@ -53,8 +61,8 @@ export async function getSessionData(sessionId) {
   }
 }
 
-// Function to identidy all stim that users saw
-export async function fetchStimuliByUserId(userId) {
+// Function to choose random stimuli based on all available stimuli and stim that participant already saw
+export async function chooseStimuli(userId, includedStimuli){
   // Create a query to filter sessions by userId
   const sessionsQuery = query(
     collection(db, 'experimentData'),
@@ -76,22 +84,10 @@ export async function fetchStimuliByUserId(userId) {
     }
   });
   console.log('Seen Stimuli:', seenStimuli);
-  return seenStimuli;
-}
-
-// Function to choose stimuli
-export async function chooseStimuli(userId) {
-  // Fetch all stimuli from sessions where userId matches
-  const userStimuli = await fetchStimuliByUserId(userId);
-
-  // Fetch the list of included stimuli from videoParameters in experimentParameters
-  const experimentParametersDoc = doc(db, 'experimentParameters', 'videoParameters');
-  const experimentParametersSnapshot = await getDoc(experimentParametersDoc);
-  const includedStimuli = experimentParametersSnapshot.data().includedStim;
   console.log('included stiumuli:', includedStimuli)
 
   // Eliminate stimlui that user already saw
-  const optionalStimuli = includedStimuli.filter((stimulus) => !userStimuli.includes(stimulus));
+  const optionalStimuli = includedStimuli.filter((stimulus) => !seenStimuli.includes(stimulus));
   console.log('Optional Stimuli:', optionalStimuli);
   // Randomly choose a stimuli from those they did not see
   const randomIndex = Math.floor(Math.random() * optionalStimuli.length);
@@ -117,3 +113,27 @@ export async function stimURL(stimName) {
   }
 }
 
+export async function retrieveRatingWords(fieldName) {
+  const ratingWordsDocRef = doc(db, 'experimentParameters', 'ratingWords');
+  const ratingWordsSnapshot = await getDoc(ratingWordsDocRef);
+
+  if (ratingWordsSnapshot.exists()) {
+    const value = ratingWordsSnapshot.data()[fieldName];
+
+    if (value !== undefined) {
+      return value;
+    } else {
+      console.error('Can not find emotion list in parameters');
+      return null;
+    }
+  }
+}
+
+export function shuffleRatingWords(ratingWords) {
+  const shuffledList = [...ratingWords]; // Create a copy of the original array
+  for (let i = shuffledList.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Generate a random index
+    [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]]; // Swap elements
+  }
+  return shuffledList;
+}

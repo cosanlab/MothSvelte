@@ -3,37 +3,37 @@
   import "@fontsource/roboto";
   // This is the task progress handler
   import { currentPageNumber } from "../../store/pageSteps";
-  import { parseURLParameters, getSessionData, chooseStimuli, stimURL } from "../../constants/utils";
-
-
+  import { parseURLParameters, getVideoParams, getSessionData, chooseStimuli, stimURL , retrieveRatingWords, shuffleRatingWords} from "../../constants/utils";
+  import { emotionsListShuffled } from "../../store/index";
   // parameters fot the session that are stored in the store so different components can read them
   import { userID, hitId, WatchedVideos, rewind_video, VideosURLs } from "../../store/index";
-  // database related functions
-  import { db } from "../../config/firebase";
-  import axios from "axios";
+
 
   import { onMount } from "svelte";
   // Components/screens for diffrent stages of the App
   import Consent from "../../screens/Consent.svelte";
-  import ScreenThree from "../../screens/screenThree.svelte";
-  import ScreenTwo from "../../screens/screenTwo.svelte"; 
-  import StepFour from "../../screens/stepFour.svelte";
-  import ScreenFive from "../../screens/screenFive.svelte";
-  import ScreenSix from "../../screens/screenSix.svelte";
-  import HumanVerificatin from "../../screens/HumanVerificatin.svelte";
-  import ScreenEight from "../../screens/screenEight.svelte";
-  import ScreenNine from "../../screens/screenNine.svelte";
+  import Welcome from "../../screens/Welcome.svelte";
+  import BotCheckWord from "../../components/BotCheckWord.svelte";
+  import BotCheckMovie from "../../components/BotCheckMovie.svelte";
+  import TaskInstructions from "../../screens/TaskInstructions.svelte";
+
+
+ 
+
   import ScreenTen from "../../screens/screenTen.svelte";
   import ScreenEleven from "../../screens/screenEleven.svelte";
   import ScreenTweleve from "../../screens/screenTweleve.svelte";
   import ScreenThirteen from "../../screens/screenThirteen.svelte";
   import ScreenFourteen from "../../screens/screenFourteen.svelte";
+  import TrialFinishedError from "../../components/TrialFinishedError.svelte";
+
   let currentPage;
 
   let userId;
   let taskId;
   let sessionId;
   let platform;
+  let videoParams;
   let sessionData;
   let curStim;
 
@@ -50,11 +50,14 @@
     console.log("Session ID:", sessionId);
     console.log("Platform:", platform);
 
+    videoParams = await getVideoParams();
+    console.log(" video parameters:", videoParams);
+
     sessionData = await getSessionData(sessionId);
 
     if (sessionData === null) {
       console.log("new session");
-      curStim = await chooseStimuli(userId)
+      curStim = await chooseStimuli(userId, videoParams.includedStim)
       console.log('Stim for new session:', curStim);
     } else if (sessionData.status === "complete") {
       console.log("session complete, route to completion page");
@@ -64,6 +67,12 @@
     }
     const curStimURL = await stimURL(curStim);
     console.log(curStimURL);
+
+    const emotions = await retrieveRatingWords('emotions');
+    console.log(emotions);
+    const shuffledEmotions = shuffleRatingWords(emotions)
+    emotionsListShuffled.set(shuffledEmotions);
+    console.log(shuffledEmotions);
 
     currentPageNumber.subscribe((value) => {
       currentPage = value;
@@ -75,21 +84,15 @@
 {#if currentPage === 0}
   <Consent />
 {:else if currentPage === 1}
-  <ScreenTwo />
+  <Welcome />
 {:else if currentPage === 2}
-  <ScreenThree />
+  <BotCheckWord />
 {:else if currentPage === 3}
-sc  <StepFour />
+  <BotCheckMovie />
 {:else if currentPage === 4}
-  <ScreenFive />
-{:else if currentPage === 5}
-  <ScreenSix />
-{:else if currentPage === 6}
-  <HumanVerificatin />
-{:else if currentPage === 7}
-  <ScreenEight />
-{:else if currentPage === 8}
-  <ScreenNine />
+  <TaskInstructions />
+
+
 {:else if currentPage === 9}
   <ScreenTen />
 {:else if currentPage === 10}
@@ -100,4 +103,6 @@ sc  <StepFour />
   <ScreenThirteen />
 {:else if currentPage === 13}
   <ScreenFourteen />
+{:else if currentPage === 20}
+  <TrialFinishedError />
 {/if}

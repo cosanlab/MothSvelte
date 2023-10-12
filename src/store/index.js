@@ -22,3 +22,6 @@ export let timer = writable([]);
 export let ratingScreenTimings = [];
 // --- re-wind video parameter
 export let rewind_video = writable(0);
+
+
+export let emotionsListShuffled = writable([]);

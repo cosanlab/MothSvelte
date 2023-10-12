@@ -1,7 +1,6 @@
 <script>
   import logo from "./assets/logo.png";
   import "@fontsource/roboto";
-  import { WelcomePage } from "./constants/constants";
   import { generateRandomQueryString } from './constants/utils.js';
   import { onMount } from "svelte";
 
@@ -46,11 +45,11 @@
 
     <div class="right w-[80%] h-auto flex flex-col gap-2">
       <h1 class="text-4xl">
-        {WelcomePage.TITLE}
+        Thank you for accepting this study!
       </h1>
 
       <p class="text-lg">
-        {WelcomePage.SUBTITLE}
+        By clicking the following URL link, you will be taken to the experiment, including complete instructions and an informed consent agreement.
       </p>
 
       <div class="container mx-auto">
@@ -64,8 +63,8 @@
             >
               <!-- svelte-ignore a11y-missing-attribute -->
               <p class="text-[#8a6d3b] text-lg">
-                <b>{WelcomePage.WARNING_MESSAGE}</b>
-                {WelcomePage.INSTRUCTIONS}
+                <b>Warning:</b>
+                Please disable pop-up blockers before continuing.
               </p>
             </div>
           </div>
@@ -77,7 +76,7 @@
         class="bg-blue-700 opacity-75 text-white w-40 p-2 px-2 text-lg border-2 border-blue-700 rounded-md hover:bg-blue-800 active:border-2 focus:border-2 focus:border-black active:border-black"
         on:click={openNewWindow}
       >
-        {WelcomePage.BUTTON}
+      Begin Experiment
       </button>
     </div>
   </div>
