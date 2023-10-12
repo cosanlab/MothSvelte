@@ -30,6 +30,7 @@
   }
 
   randomWord = generateRandomWord()
+  console.log(randomWord);
 
   function checkTextboxes() {
     if (randomWord.toLowerCase() == inputValue1 && inputValue2 == "") {
@@ -39,6 +40,7 @@
       trial_Times += 1;
       console.log("This was mistake:", trial_Times);
       if (trial_Times < maxAttempts){
+        inputValue1=""
         currentScreen = 3;
       } else {
         ErrorPageHandler();

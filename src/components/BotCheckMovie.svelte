@@ -1,17 +1,17 @@
 <script>
-  import { onMount } from "svelte";
   import "@fontsource/roboto";
   import { currentPageNumber } from "../store/pageSteps";
   import { verificationData } from "../constants/verificationMedia";
   import { emotionsListShuffled } from "../store/index";
+  import RapidRate from "./RapidRate.svelte";
 
   let videoUrl = ""; // for verification movie
   let selectedObjectName = ""; // New variable to store the object name
   let trial_Times = 0; // mistakes counter
   let maxAttempts = 3; // max number of allowed mistakes
   let currentScreen = 1; //variable to manage screen within component
+  let ratingsMap;
 
-  console.log($emotionsListShuffled);
   //---- function method to triggered next page for passing and failing check
   const NextPageHandler = () => {
     currentPageNumber.set(4);
@@ -29,86 +29,35 @@
     console.log(selectedObjectName);
   }
 
-  // Create an array of fillWidths to store the width for each div
-  let fillWidths = Array(emotions.length).fill(0);
-  // Create an array to keep track of whether a div is clicked or not
-  let clickedDivs = Array(emotions.length).fill(false);
-  // Create an array to store selected emotions
-  let selectedEmotions = [];
-  let showErrorPage = false;
+  selectRandomMedia();
 
-  // Function to handle mouse movement for a specific div
-  function handleMouseMove(index, event) {
-    if (!clickedDivs[index]) {
-      const mouseX =
-        event.clientX - event.currentTarget.getBoundingClientRect().left;
-      const divWidth = event.currentTarget.clientWidth;
-      fillWidths[index] = Math.floor((mouseX / divWidth) * 100);
-      // Set the "None" div background to white on mousemove
-      clickedDivs[emotions.length] = true;
+  function checkRating(ratingsMap, expected) {
+    return (
+      ratingsMap[expected] > 50 &&
+      Object.keys(ratingsMap).every(
+        (key) => key === expected || ratingsMap[key] === 0
+      )
+    );
+  }
+
+  function handleRatingsChanged(event) {
+    ratingsMap = event.detail.ratings;
+    console.log(ratingsMap);
+    console.log(checkRating(ratingsMap,selectedObjectName))
+    if (checkRating(ratingsMap, selectedObjectName)) {
+      currentScreen = 5;
+    }
+    else {
+      trial_Times += 1;
+      console.log("This was mistake:", trial_Times);
+      if (trial_Times < maxAttempts){
+        currentScreen = 4;
+      } else {
+        ErrorPageHandler();
+      }
     }
   }
 
-  // Function to handle mouse out for a specific div with a delay
-  function handleMouseOut(index) {
-    if (!clickedDivs[index]) {
-      fillWidths[index] = 0;
-    }
-    // Set the "None" div background to white on mousemove
-    clickedDivs[emotions.length] = false;
-  }
-
-  // Function to handle div click
-  function handleDivClick(index) {
-    if (clickedDivs[index]) {
-      clickedDivs[index] = false; // Reset click state
-      fillWidths[index] = 0; // Reset fill width
-      // Remove the emotion from selectedEmotions array
-      selectedEmotions = selectedEmotions.filter(
-        (emotion) => emotion !== emotions[index]
-      );
-    } else {
-      clickedDivs[index] = true;
-      // Add the emotion to selectedEmotions array
-      selectedEmotions = [...selectedEmotions, emotions[index]];
-    }
-    clickedDivs[emotions.length] = true;
-  }
-
-  // Function to be called when pressing "Space" button
-  function nextPage() {
-    const isCorrect = selectedEmotions.includes(selectedObjectName)
-    console.log(isCorrect);
-   
-    // Based on the result, proceed to the next page or handle accordingly
-    if (isCorrect) {
-      currentPageNumber.set(7);
-      RemovingEvent();
-    } else {
-      // Handle incorrect selection
-      showErrorPage = true;
-    }
-  }
-
-    // Event listener function for "Space" key press
-    function spaceKeyPressHandler(event) {
-    if (event.key === " ") {
-      nextPage();
-    }
-  }
-
-  // Adding the event listener
-  window.addEventListener("keydown", spaceKeyPressHandler);
-
-  // Removing event listener
-  function RemovingEvent() {
-    window.removeEventListener("keydown", spaceKeyPressHandler);
-  }
-
-  // Call the selectRandomMedia function when the component mounts
-  onMount(() => {
-    selectRandomMedia();
-  });
 </script>
 
 {#if currentScreen === 1}
@@ -160,47 +109,11 @@
 {/if}
 
 {#if currentScreen === 3}
-<div class="container w-full h-full flex justify-center items-center">
-  <div class="wrapper mt-10 flex justify-center flex-col gap-1">
-    <div class="instruction mb-3 text-[19px]">
-      Please rate the emotions as instructed by the video:
-    </div>
-    <!-- Your existing code for emotion_tabs -->
-    {#each $emotionsListShuffled as emotion, index}
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <!-- svelte-ignore a11y-no-static-element-interactions -->
-
-      <div
-        class="emotion_tab flex gap-0.5 justify-center items-center w-[450px]"
-      >
-        <div
-          class="none-tab px-1 text-[19px] bg-[#ff816d] border-2 border-black"
-          class:bg-white={clickedDivs[index] || fillWidths[index]}
-        >
-          None
-        </div>
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <!-- svelte-ignore a11y-mouse-events-have-key-events -->
-        <div
-          class="box w-[400px] h-[32px] relative cursor-pointer border-2 border-black"
-          on:mousemove={(e) => handleMouseMove(index, e)}
-          on:mouseleave={() => handleMouseOut(index)}
-          on:click={() => handleDivClick(index)}
-        >
-          <div
-            class="fill absolute top-0 left-0 w-full h-full bg-[#ff816d]"
-            style={`width: ${fillWidths[index]}%; transition: width 0.2s ease;`}
-          />
-        </div>
-        <div class="emotion_name flex justify-start ml-1" />
-        <p class="w-[220px] justify-start text-[19px]">{emotion}</p>
-      </div>
-    {/each}
-    <!-- press space button -->
-    <p class="mt-3 text-[19px]">Press "space" when finished</p>
-  </div>
-</div>
-
+  <RapidRate
+    ratingsMap={$emotionsListShuffled}
+    instructions="Please rate the emotions as insructed in the video"
+    on:ratingsChanged={handleRatingsChanged}
+  />
 {/if}
 
 {#if currentScreen === 4}
@@ -233,7 +146,8 @@
       class="wrapper mx-4 flex flex-col gap-3 justify-center items-center text-xl text-gray-700"
     >
       <p class="flex-wrap text-center">
-      Great! It seems that you're audio and video are working properly. You are now ready to start the main task!
+        Great! It seems that you're audio and video are working properly. You
+        are now ready to start the main task!
       </p>
 
       <button
