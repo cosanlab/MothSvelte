@@ -17,21 +17,23 @@ export function generateRandomQueryString() {
 export function parseURLParameters() {
   if (typeof window !== "undefined") {
     const searchParams = new URLSearchParams(window.location.search);
-    const userId = searchParams.get("PROLIFIC_PID") || searchParams.get("workerId");
-    const taskId = searchParams.get("STUDY_ID") || searchParams.get("hitId");
-    const sessionId = searchParams.get("SESSION_ID") || searchParams.get("assignmentId");
+    const parsedUserId = searchParams.get("PROLIFIC_PID") || searchParams.get("workerId");
+    const parsedTaskId = searchParams.get("STUDY_ID") || searchParams.get("hitId");
+    const parsedSessionId = searchParams.get("SESSION_ID") || searchParams.get("assignmentId");
 
-    let platform = "Unknown";
+    let parsedPlatform = "Unknown";
     if (searchParams.has("PROLIFIC_PID")) {
-      platform = "Prolific";
+      parsedPlatform = "Prolific";
     } else if (searchParams.has("hitId")) {
-      platform = "CloudResearch";
+      parsedPlatform = "MTurk";
     }
-
-    return { userId, taskId, sessionId, platform };
+    if (parsedUserId.startsWith('debug_') && parsedTaskId.startsWith('debug_') && parsedSessionId.startsWith('debug_')) {
+      parsedPlatform = "debug";
+    }
+    return { parsedUserId, parsedTaskId, parsedSessionId, parsedPlatform };
   } else {
     // Return default values or handle the case where window is not available
-    return { userId: "", taskId: "", sessionId: "", platform: "Unknown" };
+    return { parsedUserId: "", parsedTaskId: "", parsedSessionId: "", parsedPlatform: "Unknown" };
   }
 }
 
@@ -96,8 +98,8 @@ export async function chooseStimuli(userId, includedStimuli){
   return chosenStimuli;
 }
 
-// function to retrieve stim URL from stimName
-export async function stimURL(stimName) {
+// function to retrieve stim Data from stimName
+export async function stimData(stimName) {
   const stimuliDocRef = doc(db, 'experimentParameters', 'stimuli');
   const stimuliDocSnapshot = await getDoc(stimuliDocRef);
 
@@ -111,6 +113,39 @@ export async function stimURL(stimName) {
       return null;
     }
   }
+}
+
+export function createBreaks(vidDuration, videoParameters) {
+  const numStops = Math.ceil(vidDuration/videoParameters.sampleRate);
+  const vidRange = vidDuration - videoParameters.endSpace - videoParameters.startSpace;
+
+  let potBreaks = [];
+  for (let t = 0; t < 1000; t++) {
+    potBreaks = []
+    let meetCriteria = true;
+    
+    // Sample random points from the range
+    for (let i = 0; i < numStops; i++) {
+      potBreaks.push(Math.floor(Math.random() * vidRange));
+    }
+    // Sort the array of random points
+    potBreaks.sort((a,b) => a-b);
+    // Check if the minimum distance is > minSpacing parameter
+    for (let i = 0; i < potBreaks.length - 1; i++) {
+      if (potBreaks[i + 1] - potBreaks[i] <= videoParameters.minSpacing) {
+        meetCriteria = false; // Minimum difference is not greater than 5
+        break
+      }
+    }
+    if (meetCriteria) {
+      console.log("solved within:", t)
+      break
+    }
+  }
+  console.log(potBreaks)
+  const breaks = potBreaks.map((number) => number + videoParameters.startSpace);
+  console.log(breaks)
+  return breaks;
 }
 
 export async function retrieveRatingWords(fieldName) {

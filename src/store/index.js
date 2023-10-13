@@ -1,4 +1,27 @@
 import { writable } from "svelte/store";
+
+export const userId = writable("");
+export const taskId = writable("");
+export const sessionId = writable("");
+export const platform = writable("");
+export let status = writable("");
+
+export const videoParams = writable({});
+export const curStim = writable("");
+export const curStimData = writable({});
+export const breaskPoints = writable([]);
+export const emotionsListShuffled = writable([]);
+
+
+
+
+
+
+
+
+
+
+/*
 export let loading = writable(false);
 export let userID = writable(""); // storing userID in svelte-store when fetched dynamically from URL
 export let hitId = writable("");  // storing hitId in svelte-store when fetched dynamically from URL
@@ -22,6 +45,6 @@ export let timer = writable([]);
 export let ratingScreenTimings = [];
 // --- re-wind video parameter
 export let rewind_video = writable(0);
+*/
 
 
-export let emotionsListShuffled = writable([]);
