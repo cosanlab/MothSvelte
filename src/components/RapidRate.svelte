@@ -82,8 +82,8 @@
       RemovingEvent();
       updateRatingsFromFillWidths();
       const responseTime = Date.now()-startTime;
-      console.log(responseTime);
-      console.log(ratings);
+  //    console.log(responseTime);
+  //    console.log(ratings);
       // await nextPage();
       dispatch("ratingsChanged", { ratings: ratings, responseTime: responseTime });
     }

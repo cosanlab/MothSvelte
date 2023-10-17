@@ -1,8 +1,7 @@
 <script>
   import "@fontsource/roboto";
-  import { currentPageNumber } from "../store/pageSteps";
   import { verificationData } from "../constants/verificationMedia";
-  import { emotionsListShuffled } from "../store/index";
+  import { sessionData, currentPageNumber } from "../store/index";
   import RapidRate from "./RapidRate.svelte";
 
   let videoUrl = ""; // for verification movie
@@ -110,7 +109,7 @@
 
 {#if currentScreen === 3}
   <RapidRate
-    ratingsMap={$emotionsListShuffled}
+    ratingsMap={$sessionData.shuffledEmotions}
     instructions="Please rate the emotions as insructed in the video"
     on:ratingsChanged={handleRatingsChanged}
   />

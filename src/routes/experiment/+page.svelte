@@ -2,10 +2,9 @@
 <script>
   import "@fontsource/roboto";
   // This is the task progress handler
-  import { currentPageNumber } from "../../store/pageSteps";
   import { parseURLParameters, getVideoParams, getSessionData, chooseStimuli, stimData , createBreaks, retrieveRatingWords, shuffleRatingWords} from "../../constants/utils";
-  import { userId, taskId, sessionId, platform, videoParams, curStim, curStimData, breakPoints, emotionsListShuffled } from "../../store/index";
-  // parameters fot the session that are stored in the store so different components can read them
+  import { sessionData, currentPageNumber, curSession } from "../../store/index";
+  // parameters for the session that are stored in the store so different components can read them
 
 
   import { onMount } from "svelte";
@@ -16,54 +15,74 @@
   import BotCheckMovie from "../../components/BotCheckMovie.svelte";
   import TaskInstructions from "../../screens/TaskInstructions.svelte";
   import MovieWithBreaks from "../../components/MovieWithBreaks.svelte";
-
+  import TrialFinishedError from "../../components/TrialFinishedError.svelte";
+    import TrialEndMessage from "../../components/TrialEndMessage.svelte";
 
   let currentPage;
-  let sessionData;
+  //let sessionData;
 
 
   // function definition to change the document title
   const ChangeTitle = () => {
     document.title = "Psychology Experiment";
   };
-  const { parsedUserId, parsedTaskId, parsedSessionId, parsedPlatform } = parseURLParameters();
+  const { userId, taskId, sessionId, platform } = parseURLParameters();
+  curSession.set(sessionId);
   // Set the values in the store
-  userId.set(parsedUserId);
-  taskId.set(parsedTaskId);
-  sessionId.set(parsedSessionId);
-  platform.set(parsedPlatform);
-  console.log("User ID:", $userId);
-  console.log("Task ID:", $taskId);
-  console.log("Session ID:", $sessionId);
-  console.log("Platform:", $platform);
+  console.log("User ID:", userId);
+  console.log("Task ID:", taskId);
+  console.log("Session ID:", sessionId);
+  console.log("Platform:", platform);
 
   onMount(async () => {
     //({ userId, taskId, sessionId, platform } = parseURLParameters());
     //const { parsedUserId, parsedTaskId, parsedSessionId, parsedPlatform } = parseURLParameters();
-  
-    sessionData = await getSessionData($sessionId);
+    sessionData.set(await getSessionData(sessionId));
 
-    if (sessionData === null) {
+    if ($sessionData === null) {
       console.log("new session");
-      videoParams.set(await getVideoParams());
-      console.log(" video parameters:", $videoParams);
-      curStim.set(await chooseStimuli($userId, $videoParams.includedStim))
-      console.log('Stim for new session:', $curStim);
-      curStimData.set(await stimData($curStim));
-      breakPoints.set(createBreaks($curStimData.duration, $videoParams));
-      console.log($breakPoints);
-    } else if (sessionData.status === "complete") {
-      console.log("session complete, route to completion page");
-    } else {
-      console.log("Session Status:", sessionData.status);
-      console.log("Session Stim:", sessionData.stimuli);
-    }
+      const videoParams = await getVideoParams();
+      console.log(" video parameters:", videoParams);
+      const curStim = await chooseStimuli(userId, videoParams.includedStim);
+      console.log('Stim for new session:', curStim);
+      const curStimData = await stimData(curStim);
+      const breakPoints = createBreaks(curStimData.duration, videoParams);
+      console.log(breakPoints);
+      const emotions = await retrieveRatingWords('emotions');
+      const shuffledEmotions = shuffleRatingWords(emotions)
+      console.log(shuffledEmotions);
 
-    const emotions = await retrieveRatingWords('emotions');
-    console.log(emotions);
-    const shuffledEmotions = shuffleRatingWords(emotions)
-    emotionsListShuffled.set(shuffledEmotions);
-    console.log(shuffledEmotions);
+      sessionData.set({
+        userId:userId,
+        taskId:taskId,
+        platform:platform,
+        videoParams: videoParams,
+        stimuli: curStim,
+        stimData: curStimData,
+        breakpoints: breakPoints,
+        shuffledEmotions: shuffledEmotions,
+        status: "init",
+        completedSegments: 0,
+        ratings: [],
+        attemptsStartTimestamps: []
+      });
+      console.log("SessionData:", $sessionData);
+
+    } else if ($sessionData.status === "complete") {
+      console.log("session complete, route to completion page");
+    } else if ($sessionData.status === "running") {
+      currentPageNumber.set(4);
+      console.log("Session Linked:");
+      console.log("SessionData:", $sessionData);
+    } else if ($sessionData.status === "postTaskQuestionnaire") {
+      currentPageNumber.set(6);
+      console.log("linking back to post task questionnaire")
+    } else if ($sessionData.status === "demographicsQuestionnaire") {
+      currentPageNumber.set(7);
+      console.log("linking back to demographics questionnaire")
+    } else {
+      console.error("Invalid session status:", $sessionData.status)
+    }
 
     currentPageNumber.subscribe((value) => {
       currentPage = value;
@@ -84,6 +103,13 @@
   <TaskInstructions />
 {:else if currentPage === 5}
   <MovieWithBreaks />
+{:else if currentPage === 6}
+  <TrialEndMessage/>
+
+
+
+{:else if currentPage === 20}
+  <TrialFinishedError />
 {/if}
 
 

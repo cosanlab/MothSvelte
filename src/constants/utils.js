@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from "../config/firebase";
 
 // Generate random query string for debugging
@@ -17,23 +17,25 @@ export function generateRandomQueryString() {
 export function parseURLParameters() {
   if (typeof window !== "undefined") {
     const searchParams = new URLSearchParams(window.location.search);
-    const parsedUserId = searchParams.get("PROLIFIC_PID") || searchParams.get("workerId");
-    const parsedTaskId = searchParams.get("STUDY_ID") || searchParams.get("hitId");
-    const parsedSessionId = searchParams.get("SESSION_ID") || searchParams.get("assignmentId");
+    const userId = searchParams.get("PROLIFIC_PID") || searchParams.get("workerId");
+    const taskId = searchParams.get("STUDY_ID") || searchParams.get("hitId");
+    const sessionId = searchParams.get("SESSION_ID") || searchParams.get("assignmentId");
 
-    let parsedPlatform = "Unknown";
+    let platform = "Unknown";
     if (searchParams.has("PROLIFIC_PID")) {
-      parsedPlatform = "Prolific";
+      platform = "Prolific";
     } else if (searchParams.has("hitId")) {
-      parsedPlatform = "MTurk";
+      platform = "MTurk";
     }
-    if (parsedUserId.startsWith('debug_') && parsedTaskId.startsWith('debug_') && parsedSessionId.startsWith('debug_')) {
-      parsedPlatform = "debug";
+
+    if (userId.startsWith('debug_') && taskId.startsWith('debug_') && sessionId.startsWith('debug_')) {
+      platform = "debug";
     }
-    return { parsedUserId, parsedTaskId, parsedSessionId, parsedPlatform };
+
+    return { userId, taskId, sessionId, platform };
   } else {
     // Return default values or handle the case where window is not available
-    return { parsedUserId: "", parsedTaskId: "", parsedSessionId: "", parsedPlatform: "Unknown" };
+    return { userId: "", taskId: "", sessionId: "", platform: "Unknown" };
   }
 }
 
@@ -171,4 +173,15 @@ export function shuffleRatingWords(ratingWords) {
     [shuffledList[i], shuffledList[j]] = [shuffledList[j], shuffledList[i]]; // Swap elements
   }
   return shuffledList;
+}
+
+export async function saveSessionToDB(sessionId, sessionData) {
+  try {
+    const docRef = doc(db, "experimentData", sessionId);
+    await setDoc(docRef, sessionData);
+
+    console.log("Data saved to the database.");
+  } catch (error) {
+    console.error("Error saving data to the database:", error);
+  }
 }

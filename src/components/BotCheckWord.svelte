@@ -1,5 +1,5 @@
 <script>
-  import { currentPageNumber } from "../store/pageSteps";
+  import { currentPageNumber } from "../store/index";
 
   let randomWord = ""; // Variable to store the random word
   let inputValue1 = ""; // Content of textbox1

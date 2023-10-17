@@ -1,5 +1,5 @@
 <script>
-  import { currentPageNumber } from "../store/pageSteps";
+  import { currentPageNumber } from "../store/index";
 
   // removing event
   const RemovingEvent = () => {

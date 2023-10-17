@@ -1,7 +1,7 @@
 <script>
   import { currentPageNumber } from "../store/pageSteps";
   import { ScreenTwelve } from "../constants/constants";
-  import { userID, hitId } from "../store/index";
+  import { userID, hitId, pageSteps } from "../store/index";
   import { db } from "../config/firebase";
   import { collection, addDoc, doc, setDoc } from "firebase/firestore";
   import { loading, videoRefrence} from "../store/index";

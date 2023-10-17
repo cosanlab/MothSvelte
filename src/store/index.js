@@ -1,5 +1,10 @@
 import { writable } from "svelte/store";
 
+export const curSession = writable("")
+export const sessionData = writable({});
+export const currentPageNumber = writable(0);
+
+/*
 export const userId = writable("");
 export const taskId = writable("");
 export const sessionId = writable("");
@@ -11,8 +16,7 @@ export const curStim = writable("");
 export const curStimData = writable({});
 export const breaskPoints = writable([]);
 export const emotionsListShuffled = writable([]);
-
-
+*/
 
 
 

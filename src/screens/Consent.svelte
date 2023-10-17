@@ -1,11 +1,11 @@
 <script>
   import "@fontsource/roboto";
-  import { currentPageNumber } from "../store/pageSteps";
+  import { currentPageNumber } from "../store/index";
   
 
   //----------- NextPage ----------
   const NextPageHandler = () => {
-    currentPageNumber.set(1);
+    currentPageNumber.set(4);
   };
 
 </script>
