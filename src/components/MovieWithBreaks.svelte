@@ -50,18 +50,7 @@
     currentPageNumber.set(6);
   };
 
-  /*
-  async function saveSessionData() {
-    try {
-      const sessionId = sessionData.sessionId; // Assuming sessionId is available in sessionData
-      await saveSessionToDB($curSession, $sessionData);
-      console.log("Data saved to the database.");
-    } catch (error) {
-      console.error("Error saving data to the database:", error);
-    }
-  }
-  */
-  /*function handleVisibilityChange() {
+  function handleVisibilityChange() {
     const video = document.querySelector("video");
 
     if (document.hidden) {
@@ -81,7 +70,7 @@
   // Add event listener for visibility change
   document.addEventListener("visibilitychange", handleVisibilityChange);
   
-
+/*
   onMount(() => {
     console.log("mounting")
     loadVideoSegment();
@@ -136,6 +125,7 @@
   function handleRatingsChanged(event) {
     curRatings = event.detail.ratings;
     const responseTime = event.detail.responseTime;
+    const startTime = event.detail.startTime;
     console.log(
       "ratings for breakpoint:",
       currentSegment,
@@ -147,10 +137,12 @@
     sessionData.update((currentSessionData) => {
       // Create a new ratings object
       const newRating = {
-        segStart: segStartTime,
-        segEnd: breakpoints[currentSegment],
-        attempt: attempt,
+        rateStartTime: startTime,
         responseTime: responseTime,
+        segStart: segStartTime,
+        segEnd: currentTime,
+        //segEnd: breakpoints[currentSegment],
+        attempt: attempt,
         emotionRatings: curRatings,
       };
       // Update the ratings array with the new rating
@@ -164,14 +156,19 @@
     });
     $sessionData.completedSegments = currentSegment+1;
     console.log($sessionData);
-    saveSessionToDB($curSession, $sessionData);
+    
 
     // Load the next video segment (if any) and perform other logic as needed
     if (currentSegment < breakpoints.length) {
+      saveSessionToDB($curSession, $sessionData);
       currentSegment += 1;
       ratingScreen = false;
     } else {
-      NextPageHandler();
+      (async () => {
+        $sessionData.status = "postTaskQuestionnaire";
+        await saveSessionToDB($curSession, $sessionData);
+        NextPageHandler();
+      })();
     }
   }
 </script>

@@ -16,7 +16,9 @@
   import TaskInstructions from "../../screens/TaskInstructions.svelte";
   import MovieWithBreaks from "../../components/MovieWithBreaks.svelte";
   import TrialFinishedError from "../../components/TrialFinishedError.svelte";
-    import TrialEndMessage from "../../components/TrialEndMessage.svelte";
+  import PostTaskQuest from "../../screens/PostTaskQuest.svelte";
+  import Demographics from "../../screens/Demographics.svelte";
+  import Complete from "../../screens/Complete.svelte";
 
   let currentPage;
   //let sessionData;
@@ -44,6 +46,10 @@
       const videoParams = await getVideoParams();
       console.log(" video parameters:", videoParams);
       const curStim = await chooseStimuli(userId, videoParams.includedStim);
+      if (curStim === null) {
+        console.log("User saw all included data in task");
+        currentPageNumber.set(19);
+      }
       console.log('Stim for new session:', curStim);
       const curStimData = await stimData(curStim);
       const breakPoints = createBreaks(curStimData.duration, videoParams);
@@ -69,6 +75,7 @@
       console.log("SessionData:", $sessionData);
 
     } else if ($sessionData.status === "complete") {
+      currentPageNumber.set(8);
       console.log("session complete, route to completion page");
     } else if ($sessionData.status === "running") {
       currentPageNumber.set(4);
@@ -77,7 +84,7 @@
     } else if ($sessionData.status === "postTaskQuestionnaire") {
       currentPageNumber.set(6);
       console.log("linking back to post task questionnaire")
-    } else if ($sessionData.status === "demographicsQuestionnaire") {
+    } else if ($sessionData.status === "demographics") {
       currentPageNumber.set(7);
       console.log("linking back to demographics questionnaire")
     } else {
@@ -104,7 +111,11 @@
 {:else if currentPage === 5}
   <MovieWithBreaks />
 {:else if currentPage === 6}
-  <TrialEndMessage/>
+  <PostTaskQuest />
+{:else if currentPage === 7}
+  <Demographics />
+{:else if currentPage === 8}
+  <Complete />
 
 
 
