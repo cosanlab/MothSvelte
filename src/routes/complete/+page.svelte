@@ -2,7 +2,6 @@
   // import logo from "../assets/logo.png";
   import logo from "../../assets/logo.png";
   import "@fontsource/roboto";
-  import {ScreenFourteen} from "../../constants/constants"
 </script>
 
 <!--  -->
@@ -19,7 +18,7 @@
     </div>
 
     <div class="right w-[85%] h-auto flex flex-col gap-5">
-      <h1 class="text-4xl">{ScreenFourteen.TITLE}</h1>
+      <h1 class="text-4xl">App debug complete</h1>
       <hr />
       <div class="container mx-auto">
         <!-- Section: Design Block -->
@@ -32,7 +31,7 @@
             >
               <!-- svelte-ignore a11y-missing-attribute -->
               <p class="text-[#8a6d3b] text-[17px]">
-                {ScreenFourteen.SUBTITLE}
+                If this was real you would be routed to a complete screen
               </p>
             </div>
           </div>

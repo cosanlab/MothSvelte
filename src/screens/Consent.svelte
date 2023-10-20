@@ -5,7 +5,7 @@
 
   //----------- NextPage ----------
   const NextPageHandler = () => {
-    currentPageNumber.set(4);
+    currentPageNumber.set(1);
   };
 
 </script>

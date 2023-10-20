@@ -1,6 +1,13 @@
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../config/firebase";
 
+
+export function consoleIfDev(...items) {
+  if (import.meta.env.DEV){
+    console.log(...items);
+  }
+}
 // Generate random query string for debugging
 export function generateRandomQueryString() {
   // Generate random 5-character strings
@@ -36,6 +43,37 @@ export function parseURLParameters() {
   } else {
     // Return default values or handle the case where window is not available
     return { userId: "", taskId: "", sessionId: "", platform: "Unknown" };
+  }
+}
+
+const auth = getAuth(); 
+// Authentication functions
+export async function loginToDB(userId) {
+  // Automatically generate the email address from the userId
+  const email = userId + "@experiment.com";
+  const password = "Password";
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    if (error.code === "auth/user-not-found") {
+      showLoginButton = false;
+      showNewAccountButton = true;
+      loginError = null;
+    } else {
+      loginError = error.code;
+    }
+  }
+}
+
+export async function createUser(userId) {
+  // Automatically generate the email address from the userId
+  const email = userId + "@experiment.com";
+  const password = "Password";
+  try {
+    // Use Firebase Authentication to create a new user with email and password
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error('User creation error:', error);
   }
 }
 
@@ -98,19 +136,18 @@ export async function chooseStimuli(userId, includedStimuli){
         seenStimuli.push(sessionData.stimuli);
       }
     });
-    console.log('Seen Stimuli:', seenStimuli);
-    console.log('included stiumuli:', includedStimuli)
+    consoleIfDev('Seen Stimuli:', seenStimuli);
+    consoleIfDev('included stiumuli:', includedStimuli)
 
     // Eliminate stimlui that user already saw
     const optionalStimuli = includedStimuli.filter((stimulus) => !seenStimuli.includes(stimulus));
-    console.log('Optional Stimuli:', optionalStimuli);
+    consoleIfDev('Optional Stimuli:', optionalStimuli);
     if (optionalStimuli.length === 0) {
       return null;
     }
     // Randomly choose a stimuli from those they did not see
     const randomIndex = Math.floor(Math.random() * optionalStimuli.length);
     const chosenStimuli = optionalStimuli[randomIndex];
-    console.log('Chosen Stimuli:', chosenStimuli);
     return chosenStimuli;
   } catch (error) {
     console.error("Error choosing stimuli:", error);
@@ -163,13 +200,13 @@ export function createBreaks(vidDuration, videoParameters) {
       }
     }
     if (meetCriteria) {
-      console.log("solved within:", t)
+      consoleIfDev("solved within:", t)
       break
     }
   }
-  console.log(potBreaks)
+  consoleIfDev(potBreaks)
   const breaks = potBreaks.map((number) => number + videoParameters.startSpace);
-  console.log(breaks)
+  consoleIfDev(breaks)
   return breaks;
 }
 
@@ -208,7 +245,7 @@ export async function saveSessionToDB(sessionId, sessionData) {
     const docRef = doc(db, "experimentData", sessionId);
     await setDoc(docRef, sessionData);
 
-    console.log("Data saved to the database.");
+    consoleIfDev("Data saved to the database.");
   } catch (error) {
     console.error("Error saving data to the database:", error);
   }

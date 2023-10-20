@@ -30,11 +30,18 @@
 
   let timeUpdateListener;
 
-  console.log("Starting main task");
-  console.log("Attempt:", attempt);
-  console.log("Breakpoints:", breakpoints);
-  console.log("rewind param:", rewind);
-  console.log("Statrting from segment", currentSegment);
+  function consoleIfDev(...items) {
+    if (import.meta.env.DEV){
+      console.log(...items);
+    }
+  }
+  
+
+  consoleIfDev("Starting main task");
+  consoleIfDev("Attempt:", attempt);
+  consoleIfDev("Breakpoints:", breakpoints);
+  consoleIfDev("rewind param:", rewind);
+  consoleIfDev("Statrting from segment", currentSegment);
 
   $sessionData.status = "running";
   sessionData.update((data) => {
@@ -72,7 +79,7 @@
   
 /*
   onMount(() => {
-    console.log("mounting")
+    consoleIfDev("mounting")
     loadVideoSegment();
   });
  */
@@ -91,7 +98,7 @@
       if (currentSegment > 0) {
         segStartTime = Math.max(0, breakpoints[currentSegment - 1] - rewind);
       }
-      console.log(
+      consoleIfDev(
         "current segment:",
         currentSegment,
         "start time:",
@@ -108,7 +115,7 @@
     if (videoElement) {
       currentTime = videoElement.currentTime;
       if (videoElement.ended) {
-        console.log("video ended, starting last rating");
+        consoleIfDev("video ended, starting last rating");
         ratingScreen = true;
       }
       if (
@@ -116,7 +123,7 @@
         currentTime >= breakpoints[currentSegment]
       ) {
         // Enter the rating component or take any necessary action
-        console.log("Break:", currentTime, Date.now());
+        consoleIfDev("Break:", currentTime, Date.now());
         ratingScreen = true;
       }
     }
@@ -126,7 +133,7 @@
     curRatings = event.detail.ratings;
     const responseTime = event.detail.responseTime;
     const startTime = event.detail.startTime;
-    console.log(
+    consoleIfDev(
       "ratings for breakpoint:",
       currentSegment,
       responseTime,
@@ -155,7 +162,7 @@
       return updatedSessionData; // This will be the new value of sessionData
     });
     $sessionData.completedSegments = currentSegment+1;
-    console.log($sessionData);
+    consoleIfDev($sessionData);
     
 
     // Load the next video segment (if any) and perform other logic as needed

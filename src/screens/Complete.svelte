@@ -1,7 +1,9 @@
 <script>
+  import { currentPageNumber } from "../store/index";
+
   // Function to be called when pressing "Space" button
   function nextPage() {
-    window.close();
+    currentPageNumber.set(9);
     RemovingEvent();
   }
 
@@ -29,7 +31,9 @@
     class="wrapper mx-4 flex flex-col justify-center items-center text-lg text-gray-700"
   >
     <p class="text-center">
-      Thank you for participating! Please wait a moment and press 'space' if this HIT is not automatically submitted. If you encounter any errors during submission, do not worry, contact <a
+      Thank you for participating! Please wait a moment and press 'space' to
+      submit the task. If you encounter any errors during submission, do not
+      worry, contact <a
         href="mailto:cosanlab@gmail.com"
         class="text-blue-800 underline">cosanlab@gmail.com</a
       > and you will be fully compensated for completing this task.

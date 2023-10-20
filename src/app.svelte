@@ -1,32 +1,33 @@
 <script>
   import logo from "./assets/logo.png";
   import "@fontsource/roboto";
-  import { generateRandomQueryString } from './constants/utils.js';
+  import { generateRandomQueryString, consoleIfDev } from "./constants/utils.js";
   import { onMount } from "svelte";
 
   // below are the static/dummy parameters which can used for the demo purpose
-  // let queryString = "hitId=hitIdws5s4d&workerId=PD-slj543dfs&assignmentId=ASSIGNMENT_ID";
-  // let queryString = "PROLIFIC_PID=65093680f0f29ac89b9a4519&STUDY_ID=UNSAVED-STUDY&SESSION_ID=0f9zflacv52c";
+  // let queryString = "hitId=taskId&workerId=userId&assignmentId=sessionId";
+  // let queryString = "PROLIFIC_PID=userId&STUDY_ID=taskId&SESSION_ID=sessionId";
 
   let queryString = "";
   //--------- Open New Window -------
-  const openNewWindow = () => {
+  function openNewWindow() {
     const customWidth = 1100; // Set your desired custom width here
     const windowFeatures = `width=${customWidth},height=${
       window.innerHeight + 80
     },left=0,top=0`;
 
     window.open(`/experiment?${queryString}`, "popupWindow", windowFeatures);
-  };
-
+  }
 
   onMount(async () => {
     queryString = window.location.search.slice(1);
     if (queryString == "") {
-      queryString = generateRandomQueryString();
-      console.log("There are no URL Parameters, generating random");
+      if (import.meta.env.DEV){
+        queryString = generateRandomQueryString();
+        consoleIfDev("There are no URL Parameters, generating random");
+      }
     } else {
-      console.log(queryString);
+      consoleIfDev(queryString);
     }
   });
 </script>
@@ -44,12 +45,11 @@
     </div>
 
     <div class="right w-[80%] h-auto flex flex-col gap-2">
-      <h1 class="text-4xl">
-        Thank you for accepting this study!
-      </h1>
+      <h1 class="text-4xl">Thank you for accepting this study!</h1>
 
       <p class="text-lg">
-        By clicking the following URL link, you will be taken to the experiment, including complete instructions and an informed consent agreement.
+        By clicking the following URL link, you will be taken to the experiment,
+        including complete instructions and an informed consent agreement.
       </p>
 
       <div class="container mx-auto">
@@ -76,7 +76,7 @@
         class="bg-blue-700 opacity-75 text-white w-40 p-2 px-2 text-lg border-2 border-blue-700 rounded-md hover:bg-blue-800 active:border-2 focus:border-2 focus:border-black active:border-black"
         on:click={openNewWindow}
       >
-      Begin Experiment
+        Begin Experiment
       </button>
     </div>
   </div>

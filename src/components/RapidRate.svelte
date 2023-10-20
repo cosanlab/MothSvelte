@@ -7,6 +7,13 @@
 
   import { onMount } from "svelte";
 
+  function consoleIfDev(...items) {
+    if (import.meta.env.DEV){
+      console.log(...items);
+    }
+  }
+  
+
   function initializeRatings(ratingsMap) {
     if (Array.isArray(ratingsMap)) {
       // If ratingsMap is an array, initialize each item to 0
@@ -82,8 +89,6 @@
       RemovingEvent();
       updateRatingsFromFillWidths();
       const responseTime = Date.now()-startTime;
-  //    console.log(responseTime);
-  //    console.log(ratings);
       // await nextPage();
       dispatch("ratingsChanged", { ratings: ratings, responseTime: responseTime, startTime: startTime });
     }

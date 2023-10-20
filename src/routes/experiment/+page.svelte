@@ -1,13 +1,31 @@
 <!-- This is the main experiment script which runs in the pop-up window-->
 <script>
   import "@fontsource/roboto";
-  // This is the task progress handler
-  import { parseURLParameters, getVideoParams, getSessionData, chooseStimuli, stimData , createBreaks, retrieveRatingWords, shuffleRatingWords} from "../../constants/utils";
-  import { sessionData, currentPageNumber, curSession } from "../../store/index";
+
+  // Functions that the app is using
+  import {
+    consoleIfDev,
+    parseURLParameters,
+    loginToDB, 
+    createUser, 
+    getVideoParams,
+    getSessionData,
+    chooseStimuli,
+    stimData,
+    createBreaks,
+    retrieveRatingWords,
+    shuffleRatingWords,
+  } from "../../constants/utils";
+
   // parameters for the session that are stored in the store so different components can read them
-
-
+  import {
+    sessionData,
+    currentPageNumber,
+    curSession,
+  } from "../../store/index";
+  
   import { onMount } from "svelte";
+
   // Components/screens for diffrent stages of the App
   import Consent from "../../screens/Consent.svelte";
   import Welcome from "../../screens/Welcome.svelte";
@@ -15,14 +33,17 @@
   import BotCheckMovie from "../../components/BotCheckMovie.svelte";
   import TaskInstructions from "../../screens/TaskInstructions.svelte";
   import MovieWithBreaks from "../../components/MovieWithBreaks.svelte";
-  import TrialFinishedError from "../../components/TrialFinishedError.svelte";
   import PostTaskQuest from "../../screens/PostTaskQuest.svelte";
   import Demographics from "../../screens/Demographics.svelte";
   import Complete from "../../screens/Complete.svelte";
+  import NoAvailableStim from "../../screens/NoAvailableStim.svelte";
+  import FailedBotCheck from "../../screens/FailedBotCheck.svelte";
+  import PermissionError from "../../screens/PermissionError.svelte";
+
+  const completeRoute = import.meta.env.VITE_COMPLETION_ROUTE;
+  consoleIfDev(completeRoute);
 
   let currentPage;
-  //let sessionData;
-
 
   // function definition to change the document title
   const ChangeTitle = () => {
@@ -31,37 +52,55 @@
   const { userId, taskId, sessionId, platform } = parseURLParameters();
   curSession.set(sessionId);
   // Set the values in the store
-  console.log("User ID:", userId);
-  console.log("Task ID:", taskId);
-  console.log("Session ID:", sessionId);
-  console.log("Platform:", platform);
+  consoleIfDev("User ID:", userId);
+  consoleIfDev("Task ID:", taskId);
+  consoleIfDev("Session ID:", sessionId);
+  consoleIfDev("Platform:", platform);
 
   onMount(async () => {
-    //({ userId, taskId, sessionId, platform } = parseURLParameters());
+    // First, try to log in with the user
+    try {
+      await loginToDB(userId);
+      consoleIfDev('User is logged in.');
+    } catch (error) {
+      // If login fails, create a new user and then try logging in again
+      console.error('Login failed. Creating a new user...');
+
+      try {
+        await createUser(userId);
+        consoleIfDev('User created successfully. Logging in...');
+        await loginToDB(userId);
+        consoleIfDev('User is logged in.');
+      } catch (createUserError) {
+        console.error('User creation or login failed:', createUserError);
+        currentPageNumber.set(18);
+      }
+    }
+      
     //const { parsedUserId, parsedTaskId, parsedSessionId, parsedPlatform } = parseURLParameters();
     sessionData.set(await getSessionData(sessionId));
 
     if ($sessionData === null) {
-      console.log("new session");
+      consoleIfDev("new session");
       const videoParams = await getVideoParams();
-      console.log(" video parameters:", videoParams);
+      consoleIfDev(" video parameters:", videoParams);
       const curStim = await chooseStimuli(userId, videoParams.includedStim);
       if (curStim === null) {
-        console.log("User saw all included data in task");
+        consoleIfDev("User saw all included data in task");
         currentPageNumber.set(19);
       }
-      console.log('Stim for new session:', curStim);
+      consoleIfDev("Stim for new session:", curStim);
       const curStimData = await stimData(curStim);
       const breakPoints = createBreaks(curStimData.duration, videoParams);
-      console.log(breakPoints);
-      const emotions = await retrieveRatingWords('emotions');
-      const shuffledEmotions = shuffleRatingWords(emotions)
-      console.log(shuffledEmotions);
+      consoleIfDev(breakPoints);
+      const emotions = await retrieveRatingWords("emotions");
+      const shuffledEmotions = shuffleRatingWords(emotions);
+      consoleIfDev(shuffledEmotions);
 
       sessionData.set({
-        userId:userId,
-        taskId:taskId,
-        platform:platform,
+        userId: userId,
+        taskId: taskId,
+        platform: platform,
         videoParams: videoParams,
         stimuli: curStim,
         stimData: curStimData,
@@ -70,25 +109,24 @@
         status: "init",
         completedSegments: 0,
         ratings: [],
-        attemptsStartTimestamps: []
+        attemptsStartTimestamps: [],
       });
-      console.log("SessionData:", $sessionData);
-
+      consoleIfDev("SessionData:", $sessionData);
     } else if ($sessionData.status === "complete") {
       currentPageNumber.set(8);
-      console.log("session complete, route to completion page");
+      consoleIfDev("session complete, route to completion page");
     } else if ($sessionData.status === "running") {
       currentPageNumber.set(4);
-      console.log("Session Linked:");
-      console.log("SessionData:", $sessionData);
+      consoleIfDev("Session Linked:");
+      consoleIfDev("SessionData:", $sessionData);
     } else if ($sessionData.status === "postTaskQuestionnaire") {
       currentPageNumber.set(6);
-      console.log("linking back to post task questionnaire")
+      consoleIfDev("linking back to post task questionnaire");
     } else if ($sessionData.status === "demographics") {
       currentPageNumber.set(7);
-      console.log("linking back to demographics questionnaire")
+      consoleIfDev("linking back to demographics questionnaire");
     } else {
-      console.error("Invalid session status:", $sessionData.status)
+      console.error("Invalid session status:", $sessionData.status);
     }
 
     currentPageNumber.subscribe((value) => {
@@ -96,6 +134,19 @@
       ChangeTitle();
     });
   });
+
+  // Add logic to detect when the experiment is completed, e.g., when the user clicks a "Finish" button
+  function finishExperiment() {
+    // Set the location of the main window based on the platform
+    if (platform === "debug") {
+      // Redirect to the '/complete' URL in debug mode
+      window.opener.location.href = "/complete";
+    } else {
+      // Redirect to an external URL in non-debug mode
+      window.opener.location.href = completeRoute;
+    }
+    window.close();
+  }
 </script>
 
 {#if currentPage === 0}
@@ -116,11 +167,12 @@
   <Demographics />
 {:else if currentPage === 8}
   <Complete />
-
-
-
+{:else if currentPage === 9}
+  {finishExperiment()} 
+{:else if currentPage === 18}
+  <PermissionError />
+{:else if currentPage === 19}
+  <NoAvailableStim />
 {:else if currentPage === 20}
-  <TrialFinishedError />
+  <FailedBotCheck />
 {/if}
-
-

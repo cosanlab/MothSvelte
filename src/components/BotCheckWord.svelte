@@ -9,6 +9,12 @@
   let currentScreen = 1; //variable to manage screen within component
 
 
+  function consoleIfDev(...items) {
+    if (import.meta.env.DEV){
+      console.log(...items);
+    }
+  }
+  
   //---- function method to triggered next page for passing and failing check
   const NextPageHandler = () => {
     currentPageNumber.set(3);
@@ -30,7 +36,7 @@
   }
 
   randomWord = generateRandomWord()
-  console.log(randomWord);
+  consoleIfDev(randomWord);
 
   function checkTextboxes() {
     if (randomWord.toLowerCase() == inputValue1 && inputValue2 == "") {
@@ -38,7 +44,7 @@
     }
     else {
       trial_Times += 1;
-      console.log("This was mistake:", trial_Times);
+      consoleIfDev("This was mistake:", trial_Times);
       if (trial_Times < maxAttempts){
         inputValue1=""
         currentScreen = 3;

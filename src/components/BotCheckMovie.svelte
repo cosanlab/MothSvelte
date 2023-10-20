@@ -11,6 +11,13 @@
   let currentScreen = 1; //variable to manage screen within component
   let ratingsMap;
 
+  
+  function consoleIfDev(...items) {
+    if (import.meta.env.DEV){
+      console.log(...items);
+    }
+  }
+  
   //---- function method to triggered next page for passing and failing check
   const NextPageHandler = () => {
     currentPageNumber.set(4);
@@ -25,7 +32,7 @@
     const randomIndex = Math.floor(Math.random() * verificationData.length);
     videoUrl = verificationData[randomIndex].media;
     selectedObjectName = verificationData[randomIndex].name; // Save the object name
-    console.log(selectedObjectName);
+    consoleIfDev(selectedObjectName);
   }
 
   selectRandomMedia();
@@ -41,14 +48,14 @@
 
   function handleRatingsChanged(event) {
     ratingsMap = event.detail.ratings;
-    console.log(ratingsMap);
-    console.log(checkRating(ratingsMap,selectedObjectName))
+    consoleIfDev(ratingsMap);
+    consoleIfDev(checkRating(ratingsMap,selectedObjectName))
     if (checkRating(ratingsMap, selectedObjectName)) {
       currentScreen = 5;
     }
     else {
       trial_Times += 1;
-      console.log("This was mistake:", trial_Times);
+      consoleIfDev("This was mistake:", trial_Times);
       if (trial_Times < maxAttempts){
         currentScreen = 4;
       } else {
